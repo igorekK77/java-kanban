@@ -35,13 +35,13 @@ public class Main {
                 "Сбор материалов и данных для слайдов презентации.", Status.NEW, idEpic2);
         final int idSubtask3 = manager.createSubTask(subtask3);
 
-        System.out.println(manager.getTaskOnId(idTask1));
-        System.out.println(manager.getTaskOnId(idTask2));
-        System.out.println(manager.getEpicOnId(idEpic1));
-        System.out.println(manager.getSubTaskOnId(idSubtask1));
-        System.out.println(manager.getSubTaskOnId(idSubtask2));
-        System.out.println(manager.getEpicOnId(idEpic2));
-        System.out.println(manager.getSubTaskOnId(idSubtask3));
+        System.out.println(manager.getTaskById(idTask1));
+        System.out.println(manager.getTaskById(idTask2));
+        System.out.println(manager.getEpicById(idEpic1));
+        System.out.println(manager.getSubTaskById(idSubtask1));
+        System.out.println(manager.getSubTaskById(idSubtask2));
+        System.out.println(manager.getEpicById(idEpic2));
+        System.out.println(manager.getSubTaskById(idSubtask3));
 
         //Обновление
         task1.setStatus(Status.IN_PROGRES);
@@ -61,28 +61,28 @@ public class Main {
         System.out.println();
         System.out.println();
         System.out.println();
-        System.out.println(manager.getTaskOnId(idTask1));
-        System.out.println(manager.getTaskOnId(idTask2));
-        System.out.println(manager.getEpicOnId(idEpic1));
-        System.out.println(manager.getSubTaskOnId(idSubtask1));
-        System.out.println(manager.getSubTaskOnId(idSubtask2));
-        System.out.println(manager.getEpicOnId(idEpic2));
-        System.out.println(manager.getSubTaskOnId(idSubtask3));
+        System.out.println(manager.getTaskById(idTask1));
+        System.out.println(manager.getTaskById(idTask2));
+        System.out.println(manager.getEpicById(idEpic1));
+        System.out.println(manager.getSubTaskById(idSubtask1));
+        System.out.println(manager.getSubTaskById(idSubtask2));
+        System.out.println(manager.getEpicById(idEpic2));
+        System.out.println(manager.getSubTaskById(idSubtask3));
 
 
         //Удаление
-        manager.deleteTaskOnId(idTask2);
-        manager.deleteEpicOnId(idEpic2);
+        manager.deleteTaskById(idTask2);
+        manager.deleteEpicById(idEpic2);
 
         System.out.println();
         System.out.println();
         System.out.println();
-        System.out.println(manager.getTaskOnId(idTask1));
-        System.out.println(manager.getTaskOnId(idTask2));
-        System.out.println(manager.getEpicOnId(idEpic1));
-        System.out.println(manager.getSubTaskOnId(idSubtask1));
-        System.out.println(manager.getSubTaskOnId(idSubtask2));
-        System.out.println(manager.getEpicOnId(idEpic2));
-        System.out.println(manager.getSubTaskOnId(idSubtask3));
+        System.out.println(manager.getTaskById(idTask1));
+        System.out.println(manager.getTaskById(idTask2));
+        System.out.println(manager.getEpicById(idEpic1));
+        System.out.println(manager.getSubTaskById(idSubtask1));
+        System.out.println(manager.getSubTaskById(idSubtask2));
+        System.out.println(manager.getEpicById(idEpic2));
+        System.out.println(manager.getSubTaskById(idSubtask3));
     }
 }

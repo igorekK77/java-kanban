@@ -1,8 +1,8 @@
 public class Task {
-    private String nameTask;
-    private String descriptionTask;
-    private int idTask;
-    private Status status;
+    protected String nameTask;
+    protected String descriptionTask;
+    protected int idTask;
+    protected Status status;
 
     public Task(String nameTask, String descriptionTask, Status status) {
         this.nameTask = nameTask;
