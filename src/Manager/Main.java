@@ -1,3 +1,6 @@
+package Manager;
+import Task.*;
+
 public class Main {
     public static void main(String[] args) {
         Manager manager = new Manager();
@@ -44,12 +47,12 @@ public class Main {
         System.out.println(manager.getSubTaskById(idSubtask3));
 
         //Обновление
-        task1.setStatus(Status.IN_PROGRES);
+        task1.setStatus(Status.IN_PROGRESS);
         manager.updateTask(idTask1, task1);
         task2.setStatus(Status.DONE);
         manager.updateTask(idTask2, task2);
 
-        subtask1.setStatus(Status.IN_PROGRES);
+        subtask1.setStatus(Status.IN_PROGRESS);
         manager.updateSubTask(idSubtask1, subtask1);
 
         subtask2.setStatus(Status.DONE);
@@ -72,6 +75,19 @@ public class Main {
 
         //Удаление
         manager.deleteTaskById(idTask2);
+        manager.deleteSubTaskById(idSubtask2);
+
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println(manager.getTaskById(idTask1));
+        System.out.println(manager.getTaskById(idTask2));
+        System.out.println(manager.getEpicById(idEpic1));
+        System.out.println(manager.getSubTaskById(idSubtask1));
+        System.out.println(manager.getSubTaskById(idSubtask2));
+        System.out.println(manager.getEpicById(idEpic2));
+        System.out.println(manager.getSubTaskById(idSubtask3));
+
         manager.deleteEpicById(idEpic2);
 
         System.out.println();

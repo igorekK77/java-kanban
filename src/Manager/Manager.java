@@ -1,3 +1,6 @@
+package Manager;
+import Task.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -77,8 +80,8 @@ public class Manager {
         switch (newSubTask.getStatus()){
             case NEW:
                 break;
-            case IN_PROGRES:
-                epic.setStatus(Status.IN_PROGRES);
+            case IN_PROGRESS:
+                epic.setStatus(Status.IN_PROGRESS);
                 break;
         }
         return newSubTask.getIdTask();
@@ -89,7 +92,7 @@ public class Manager {
         updateEpicStatus(updateSubTask);
     }
 
-    public void updateEpicStatus (Subtask updateSubTask) {
+    private void updateEpicStatus (Subtask updateSubTask) {
         Epic epic = getEpicById(updateSubTask.getEpicId());
         ArrayList<Subtask> checkSubtask = new ArrayList<>();
         for (Subtask subtask: subtasks.values()) {
@@ -100,18 +103,21 @@ public class Manager {
 
         int countDoneSubTask = 0;
         int countInProgressSubtask = 0;
+        int countNewTask = 0;
         for (Subtask subtask: checkSubtask) {
             if (subtask.getStatus() == Status.DONE) {
                 countDoneSubTask++;
-            } else if (subtask.getStatus() == Status.IN_PROGRES) {
+            } else if (subtask.getStatus() == Status.IN_PROGRESS) {
                 countInProgressSubtask++;
+            } else if (subtask.getStatus() == Status.NEW) {
+                countNewTask++;
             }
         }
 
         if (countDoneSubTask == checkSubtask.size()) {
             epic.setStatus(Status.DONE);
-        } else if (countInProgressSubtask > 0) {
-            epic.setStatus(Status.IN_PROGRES);
+        } else if (countInProgressSubtask > 0 || countDoneSubTask > 0 && countNewTask > 0) {
+            epic.setStatus(Status.IN_PROGRESS);
         }
     }
 
@@ -122,6 +128,7 @@ public class Manager {
         for (Integer idSubTask: subTaskIds) {
             if (idSubTask == subtask.getIdTask()) {
                 subTaskIds.remove(idSubTask);
+                break;
             }
         }
         epic.setAllSubtaskIds(subTaskIds);
