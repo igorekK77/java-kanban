@@ -1,4 +1,5 @@
 package Test;
+import HistoryManager.InMemoryHistoryManager;
 import Manager.*;
 import Task.*;
 import org.junit.jupiter.api.Assertions;
@@ -22,7 +23,6 @@ class InMemoryTaskManagerTest {
         inMemoryTaskManager.getTaskById(task1.getIdTask());
         inMemoryTaskManager.getEpicById(epic1.getIdTask());
         inMemoryTaskManager.getSubTaskById(subtask1.getIdTask());
-
         ArrayList<Task> checkingTheHistory = new ArrayList<>();
         checkingTheHistory.add(task1);
         checkingTheHistory.add(epic1);
@@ -63,6 +63,22 @@ class InMemoryTaskManagerTest {
         checkingTheHistory.add(task1);
         checkingTheHistory.add(epic1);
         Assertions.assertEquals(checkingTheHistory, inMemoryTaskManager.getHistory());
+    }
+
+    @Test
+    public void checkingMethodOfReturningEpicSubtasks() {
+        Epic epic = new Epic("Epic1", "Epic1");
+        inMemoryTaskManager.createEpic(epic);
+        Subtask subtask1 = new Subtask("test1", "testd1", Status.NEW, epic.getIdTask());
+        Subtask subtask2 = new Subtask("Test2", "dTest2", Status.NEW, epic.getIdTask());
+        inMemoryTaskManager.createSubTask(subtask1);
+        inMemoryTaskManager.createSubTask(subtask2);
+
+        ArrayList<Subtask> forCheck = new ArrayList<>();
+        forCheck.add(subtask1);
+        forCheck.add(subtask2);
+
+        Assertions.assertEquals(forCheck, inMemoryTaskManager.getEpicSubtask(epic.getIdTask()));
     }
 
 }

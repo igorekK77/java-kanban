@@ -1,5 +1,6 @@
 package Manager;
 import Task.*;
+import HistoryManager.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,7 +10,7 @@ public class InMemoryTaskManager implements TaskManager {
     private HashMap<Integer, Subtask> subtasks = new HashMap<>();
     private HashMap<Integer, Epic> epics = new HashMap<>();
 
-    private ArrayList<Task> historySearchTask = new ArrayList<>();
+    private HistoryManager historyManager = Managers.getDefaultHistory();
 
     private int idCounter = 0;
 
@@ -30,19 +31,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task getTaskById(int id) {
-        if (historySearchTask.size() == 10) {
-            ArrayList<Task> temporaryHistorySearchTask = new ArrayList<>();
-            for (Task task: historySearchTask) {
-                temporaryHistorySearchTask.add(task);
-            }
-            historySearchTask = new ArrayList<>();
-            for (int i = 1; i < temporaryHistorySearchTask.size(); i++) {
-                historySearchTask.add(temporaryHistorySearchTask.get(i));
-            }
-            historySearchTask.add(tasks.get(id));
-        } else {
-            historySearchTask.add(tasks.get(id));
-        }
+        historyManager.add(tasks.get(id));
         return tasks.get(id);
     }
 
@@ -92,19 +81,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Subtask getSubTaskById(int id) {
-        if (historySearchTask.size() == 10) {
-            ArrayList<Task> temporaryHistorySearchTask = new ArrayList<>();
-            for (Task task: historySearchTask) {
-                temporaryHistorySearchTask.add(task);
-            }
-            historySearchTask = new ArrayList<>();
-            for (int i = 1; i < temporaryHistorySearchTask.size(); i++) {
-                historySearchTask.add(temporaryHistorySearchTask.get(i));
-            }
-            historySearchTask.add(subtasks.get(id));
-        } else {
-            historySearchTask.add(subtasks.get(id));
-        }
+        historyManager.add(subtasks.get(id));
         return subtasks.get(id);
     }
 
@@ -199,19 +176,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Epic getEpicById(int id) {
-        if (historySearchTask.size() == 10) {
-            ArrayList<Task> temporaryHistorySearchTask = new ArrayList<>();
-            for (Task task: historySearchTask) {
-                temporaryHistorySearchTask.add(task);
-            }
-            historySearchTask = new ArrayList<>();
-            for (int i = 1; i < temporaryHistorySearchTask.size(); i++) {
-                historySearchTask.add(temporaryHistorySearchTask.get(i));
-            }
-            historySearchTask.add(epics.get(id));
-        } else {
-            historySearchTask.add(epics.get(id));
-        }
+        historyManager.add(epics.get(id));
         return epics.get(id);
     }
 
@@ -229,6 +194,16 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
+    public ArrayList<Subtask> getEpicSubtask(int epicid) {
+        Epic epic = epicSearchByIdInsideTheClass(epicid);
+        ArrayList<Subtask> epicSubtask = new ArrayList<>();
+        for (Integer subtaskid: epic.getSubtaskIds()) {
+            epicSubtask.add(subtasks.get(subtaskid));
+        }
+        return epicSubtask;
+    }
+
+    @Override
     public void updateEpic(int id, Epic updateEpic) {
         epics.put(id, updateEpic);
     }
@@ -243,13 +218,13 @@ public class InMemoryTaskManager implements TaskManager {
                 subtasks.remove(idSubtask);
             }
         }
-
-
     }
 
+    @Override
     public ArrayList<Task> getHistory() {
-        return historySearchTask;
+        return historyManager.getHistory();
     }
+
 
 
 

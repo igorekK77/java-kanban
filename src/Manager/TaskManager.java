@@ -38,7 +38,12 @@ public interface TaskManager {
 
     Epic createEpic(Epic newEpic);
 
+    ArrayList<Subtask> getEpicSubtask(int epicid);
+
     void updateEpic(int id, Epic updateEpic);
 
     void deleteEpicById(int id);
+
+    public ArrayList<Task> getHistory();
+
 }
