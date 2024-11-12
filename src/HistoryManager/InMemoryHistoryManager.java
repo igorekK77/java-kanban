@@ -3,6 +3,7 @@ package HistoryManager;
 import Task.Task;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class InMemoryHistoryManager implements HistoryManager{
 
@@ -28,5 +29,18 @@ public class InMemoryHistoryManager implements HistoryManager{
     @Override
     public ArrayList<Task> getHistory() {
         return historySearchTask;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        InMemoryHistoryManager that = (InMemoryHistoryManager) o;
+        return Objects.equals(historySearchTask, that.historySearchTask);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(historySearchTask);
     }
 }

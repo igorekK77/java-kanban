@@ -4,6 +4,7 @@ import HistoryManager.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class InMemoryTaskManager implements TaskManager {
     private HashMap<Integer, Task> tasks = new HashMap<>();
@@ -226,7 +227,16 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        InMemoryTaskManager that = (InMemoryTaskManager) o;
+        return idCounter == that.idCounter && Objects.equals(tasks, that.tasks) && Objects.equals(subtasks, that.subtasks) && Objects.equals(epics, that.epics) && Objects.equals(historyManager, that.historyManager);
+    }
 
-
-
+    @Override
+    public int hashCode() {
+        return Objects.hash(tasks, subtasks, epics, historyManager, idCounter);
+    }
 }
