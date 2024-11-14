@@ -1,8 +1,10 @@
-package Test;
-import HistoryManager.HistoryManager;
-import HistoryManager.InMemoryHistoryManager;
-import Manager.*;
-import Task.*;
+package test;
+
+import historyManager.HistoryManager;
+import historyManager.InMemoryHistoryManager;
+import manager.*;
+import org.junit.jupiter.api.BeforeAll;
+import task.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,16 +15,18 @@ import java.util.ArrayList;
 class InMemoryTaskManagerTest {
     private static  InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager();
 
+    private static final Task task1 = new Task("Test1", "DTest1", Status.NEW);
+    private static Epic epic1 = new Epic("Epic1", "DEpic1");
+
     @BeforeEach
     public void beforeEach() {
         inMemoryTaskManager = new InMemoryTaskManager();
+        epic1 = new Epic("Epic1", "DEpic1");
     }
 
     @Test
-    public void CheckingTheWorkTaskBrowsingHistory() {
-        Task task1 = new Task("Test1", "DTest1", Status.NEW);
+    public void checkTheWorkTaskBrowsingHistory() {
         inMemoryTaskManager.createTask(task1);
-        Epic epic1 = new Epic("Epic1", "DEpic1");
         inMemoryTaskManager.createEpic(epic1);
         Subtask subtask1 = new Subtask("SubTask1", "DSubTask1", Status.NEW, epic1.getIdTask());
         inMemoryTaskManager.createSubTask(subtask1);
@@ -40,9 +44,7 @@ class InMemoryTaskManagerTest {
 
     @Test
     public void CheckingTheWorkTaskBrowsingHistoryAfetr10() {
-        Task task1 = new Task("Test1", "DTest1", Status.NEW);
         inMemoryTaskManager.createTask(task1);
-        Epic epic1 = new Epic("Epic1", "DEpic1");
         inMemoryTaskManager.createEpic(epic1);
         Subtask subtask1 = new Subtask("SubTask1", "DSubTask1", Status.NEW, epic1.getIdTask());
         inMemoryTaskManager.createSubTask(subtask1);
@@ -74,10 +76,9 @@ class InMemoryTaskManagerTest {
 
     @Test
     public void checkingMethodOfReturningEpicSubtasks() {
-        Epic epic = new Epic("Epic1", "Epic1");
-        inMemoryTaskManager.createEpic(epic);
-        Subtask subtask1 = new Subtask("test1", "testd1", Status.NEW, epic.getIdTask());
-        Subtask subtask2 = new Subtask("Test2", "dTest2", Status.NEW, epic.getIdTask());
+        inMemoryTaskManager.createEpic(epic1);
+        Subtask subtask1 = new Subtask("test1", "testd1", Status.NEW, epic1.getIdTask());
+        Subtask subtask2 = new Subtask("Test2", "dTest2", Status.NEW, epic1.getIdTask());
         inMemoryTaskManager.createSubTask(subtask1);
         inMemoryTaskManager.createSubTask(subtask2);
 
@@ -85,7 +86,7 @@ class InMemoryTaskManagerTest {
         forCheck.add(subtask1);
         forCheck.add(subtask2);
 
-        Assertions.assertEquals(forCheck, inMemoryTaskManager.getEpicSubtask(epic.getIdTask()));
+        Assertions.assertEquals(forCheck, inMemoryTaskManager.getEpicSubtask(epic1.getIdTask()));
     }
 
     @Test
@@ -104,16 +105,14 @@ class InMemoryTaskManagerTest {
 
     @Test
     public void checkingThatInMemoryTaskManagerAddsTasksOfDifferentTypesAndCanFindThemById() {
-        Task task = new Task("Test1", "DTest1", Status.NEW);
-        inMemoryTaskManager.createTask(task);
-        Epic epic = new Epic("Epic1", "DEpic1");
-        inMemoryTaskManager.createEpic(epic);
-        Subtask subtask = new Subtask("test1", "testd1", Status.NEW, epic.getIdTask());
-        inMemoryTaskManager.createSubTask(subtask);
+        inMemoryTaskManager.createTask(task1);
+        inMemoryTaskManager.createEpic(epic1);
+        Subtask subtask1 = new Subtask("SubTask1", "DSubTask1", Status.NEW, epic1.getIdTask());
+        inMemoryTaskManager.createSubTask(subtask1);
 
-        Assertions.assertEquals(inMemoryTaskManager.getTaskById(task.getIdTask()), task);
-        Assertions.assertEquals(inMemoryTaskManager.getEpicById(epic.getIdTask()), epic);
-        Assertions.assertEquals(inMemoryTaskManager.getSubTaskById(subtask.getIdTask()), subtask);
+        Assertions.assertEquals(inMemoryTaskManager.getTaskById(task1.getIdTask()), task1);
+        Assertions.assertEquals(inMemoryTaskManager.getEpicById(epic1.getIdTask()), epic1);
+        Assertions.assertEquals(inMemoryTaskManager.getSubTaskById(subtask1.getIdTask()), subtask1);
     }
 
     @Test
@@ -131,20 +130,23 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    public void tasksAddedToTheHistoryManagerRetainThePreviousVersionOfTaskAndItsData() {
-        Task task = new Task("Test1", "DTest1", Status.NEW);
-        inMemoryTaskManager.createTask(task);
-        Epic epic = new Epic("Epic1", "DEpic1");
-        inMemoryTaskManager.createEpic(epic);
-        Subtask subtask = new Subtask("test1", "testd1", Status.NEW, epic.getIdTask());
-        inMemoryTaskManager.createSubTask(subtask);
+    public void shouldRetainTaskVersionInHistory() {
+        inMemoryTaskManager.createTask(task1);
+        inMemoryTaskManager.createEpic(epic1);
+        Subtask subtask1 = new Subtask("SubTask1", "DSubTask1", Status.NEW, epic1.getIdTask());
+        inMemoryTaskManager.createSubTask(subtask1);
 
-        inMemoryTaskManager.getTaskById(task.getIdTask());
-        inMemoryTaskManager.getEpicById(epic.getIdTask());
-        inMemoryTaskManager.getSubTaskById(subtask.getIdTask());
+        inMemoryTaskManager.getTaskById(task1.getIdTask());
+        inMemoryTaskManager.getEpicById(epic1.getIdTask());
+        inMemoryTaskManager.getSubTaskById(subtask1.getIdTask());
 
-        Assertions.assertEquals(inMemoryTaskManager.getHistory().get(0), task);
-        Assertions.assertEquals(inMemoryTaskManager.getHistory().get(1), epic);
-        Assertions.assertEquals(inMemoryTaskManager.getHistory().get(2), subtask);
+        Assertions.assertEquals(inMemoryTaskManager.getHistory().get(0), task1);
+        Assertions.assertEquals(inMemoryTaskManager.getHistory().get(1), epic1);
+        Assertions.assertEquals(inMemoryTaskManager.getHistory().get(2), subtask1);
+    }
+
+    @Test
+    public void test() {
+        Subtask subtask = new Subtask("1", "1", Status.NEW, )
     }
 }

@@ -1,6 +1,6 @@
-package HistoryManager;
+package historyManager;
 
-import Task.*;
+import task.*;
 
 import java.util.ArrayList;
 

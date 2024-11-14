@@ -1,6 +1,8 @@
-package Manager;
-import HistoryManager.InMemoryHistoryManager;
-import Task.*;
+package manager;
+
+import historyManager.HistoryManager;
+import historyManager.InMemoryHistoryManager;
+import task.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -111,7 +113,7 @@ public class Main {
     }
 
     private static void printAllTasks(TaskManager manager) {
-        InMemoryHistoryManager historyManager = new InMemoryHistoryManager();
+        HistoryManager historyManager = Managers.getDefaultHistory();
         System.out.println("Задачи:");
         for (Task task : manager.getAllTask()) {
             System.out.println(manager.getTaskById(task.getIdTask()));

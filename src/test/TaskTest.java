@@ -1,6 +1,6 @@
-package Test;
+package test;
 
-import Task.*;
+import task.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

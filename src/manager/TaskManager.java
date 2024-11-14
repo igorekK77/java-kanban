@@ -1,7 +1,8 @@
-package Manager;
-import Task.*;
+package manager;
 
-import Task.Task;
+import task.*;
+
+import task.Task;
 
 import java.util.ArrayList;
 
@@ -44,6 +45,6 @@ public interface TaskManager {
 
     void deleteEpicById(int id);
 
-    public ArrayList<Task> getHistory();
+    ArrayList<Task> getHistory();
 
 }

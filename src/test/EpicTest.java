@@ -1,6 +1,6 @@
-package Test;
+package test;
 
-import Task.Epic;
+import task.Epic;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
