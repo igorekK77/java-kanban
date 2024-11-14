@@ -145,8 +145,5 @@ class InMemoryTaskManagerTest {
         Assertions.assertEquals(inMemoryTaskManager.getHistory().get(2), subtask1);
     }
 
-    @Test
-    public void test() {
-        Subtask subtask = new Subtask("1", "1", Status.NEW, )
-    }
+
 }
