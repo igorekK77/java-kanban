@@ -1,9 +1,8 @@
-package test;
+package test.manager;
 
 import historyManager.HistoryManager;
 import historyManager.InMemoryHistoryManager;
 import manager.*;
-import org.junit.jupiter.api.BeforeAll;
 import task.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -143,6 +142,26 @@ class InMemoryTaskManagerTest {
         Assertions.assertEquals(inMemoryTaskManager.getHistory().get(0), task1);
         Assertions.assertEquals(inMemoryTaskManager.getHistory().get(1), epic1);
         Assertions.assertEquals(inMemoryTaskManager.getHistory().get(2), subtask1);
+    }
+
+    @Test
+    public void checkImpossibilityOfAddingEpicToItselfAsSubtask() {
+        inMemoryTaskManager.createEpic(epic1);
+        epic1.setSubtaskIds(epic1.getIdTask());
+
+        Assertions.assertTrue(epic1.getSubtaskIds().size() == 0);
+    }
+
+    @Test
+    public void checkNoConflictsBetweenTasksWithTheSpecifiedIdAndGeneratedId() {
+        inMemoryTaskManager.createEpic(epic1);
+        Subtask subtask1 = new Subtask("test2", "dTest2", Status.NEW, 0);
+        inMemoryTaskManager.createSubTask(subtask1);
+        task1.setIdTask(1);
+        inMemoryTaskManager.createTask(task1);
+
+        Assertions.assertNotNull(inMemoryTaskManager.getSubTaskById(subtask1.getIdTask()));
+        Assertions.assertNotNull(inMemoryTaskManager.getTaskById(task1.getIdTask()));
     }
 
 

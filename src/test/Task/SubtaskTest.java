@@ -1,12 +1,10 @@
-package test;
+package test.Task;
 
 import task.Epic;
 import task.Status;
 import task.Subtask;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class SubtaskTest {
     @Test
