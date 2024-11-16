@@ -164,5 +164,17 @@ class InMemoryTaskManagerTest {
         Assertions.assertNotNull(inMemoryTaskManager.getTaskById(task1.getIdTask()));
     }
 
+    @Test
+    public void checkImpossibilityOfMakingSubtaskYourOwnEpic() {
+        inMemoryTaskManager.createEpic(epic1);
+        Subtask subtask1 = new Subtask("test1", "dtest1", Status.NEW, epic1.getIdTask());
+        inMemoryTaskManager.createSubTask(subtask1);
+        Subtask subtask2 = new Subtask("test2", "dtest2", Status.NEW, subtask1.getIdTask());
+
+        Epic testEpic = inMemoryTaskManager.getEpicById(subtask2.getEpicId());
+
+        Assertions.assertNull(testEpic);
+    }
+
 
 }
