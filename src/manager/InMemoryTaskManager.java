@@ -125,7 +125,7 @@ public class InMemoryTaskManager implements TaskManager {
         updateEpicStatus(updateSubTask);
     }
 
-    private void updateEpicStatus (Subtask updateSubTask) {
+    private void updateEpicStatus(Subtask updateSubTask) {
         Epic epic = epicSearchByIdInsideTheClass(updateSubTask.getEpicId());
         ArrayList<Subtask> checkSubtask = new ArrayList<>();
         for (Subtask subtask: subtasks.values()) {
