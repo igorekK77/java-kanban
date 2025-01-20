@@ -1,6 +1,6 @@
 package manager;
 
-import HistoryManager.*;
+import historymanager.*;
 
 public class Managers {
     public static TaskManager getDefault() {

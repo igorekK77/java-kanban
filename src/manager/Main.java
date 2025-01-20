@@ -1,6 +1,6 @@
 package manager;
 
-import HistoryManager.*;
+import historymanager.*;
 import task.*;
 
 public class Main {

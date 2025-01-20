@@ -1,7 +1,7 @@
 package test.manager;
 
-import HistoryManager.HistoryManager;
-import HistoryManager.InMemoryHistoryManager;
+import historymanager.HistoryManager;
+import historymanager.InMemoryHistoryManager;
 import manager.*;
 import task.*;
 import org.junit.jupiter.api.Assertions;

@@ -1,7 +1,7 @@
 package manager;
 
 import task.*;
-import HistoryManager.*;
+import historymanager.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -108,7 +108,7 @@ public class InMemoryTaskManager implements TaskManager {
         Epic epic = epicSearchByIdInsideTheClass(newSubTask.getEpicId());
         if (epic != null) {
             epic.setSubtaskIds(newSubTask.getIdTask());
-            switch (newSubTask.getStatus()){
+            switch (newSubTask.getStatus()) {
                 case NEW:
                     break;
                 case IN_PROGRESS:
