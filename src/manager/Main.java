@@ -1,7 +1,6 @@
 package manager;
 
-import historyManager.*;
-import historyManager.InMemoryHistoryManager;
+import HistoryManager.*;
 import task.*;
 
 public class Main {

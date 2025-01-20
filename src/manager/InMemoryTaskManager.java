@@ -1,7 +1,7 @@
 package manager;
 
 import task.*;
-import historyManager.*;
+import HistoryManager.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
