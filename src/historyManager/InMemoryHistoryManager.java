@@ -32,6 +32,16 @@ public class InMemoryHistoryManager implements HistoryManager{
     }
 
     @Override
+    public void remove(int id) {
+        for (Task task: historySearchTask) {
+            if (task.getIdTask() == id) {
+                historySearchTask.remove(task);
+                break;
+            }
+        }
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
