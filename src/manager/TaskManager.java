@@ -4,7 +4,6 @@ import task.*;
 
 import task.Task;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface TaskManager {
