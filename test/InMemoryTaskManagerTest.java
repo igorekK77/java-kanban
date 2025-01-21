@@ -1,5 +1,3 @@
-package test.manager;
-
 import historymanager.HistoryManager;
 import historymanager.InMemoryHistoryManager;
 import manager.*;
@@ -13,14 +11,14 @@ import java.util.Set;
 
 
 class InMemoryTaskManagerTest {
-    private static  InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager();
+    private static  TaskManager inMemoryTaskManager;
 
     private static final Task task1 = new Task("Test1", "DTest1", Status.NEW);
     private static Epic epic1 = new Epic("Epic1", "DEpic1");
 
     @BeforeEach
     public void beforeEach() {
-        inMemoryTaskManager = new InMemoryTaskManager();
+        inMemoryTaskManager = Managers.getDefault();
         epic1 = new Epic("Epic1", "DEpic1");
     }
 

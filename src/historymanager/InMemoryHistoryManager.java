@@ -2,13 +2,11 @@ package historymanager;
 
 import task.Task;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Objects;
+import java.util.*;
 
 public class InMemoryHistoryManager implements HistoryManager {
 
-    private HashMap<Integer, Node<Task>> historySearchTask = new HashMap<>();
+    private Map<Integer, Node<Task>> historySearchTask = new HashMap<>();
     private Node<Task> head;
     private Node<Task> tail;
     private int size = 0;
@@ -46,7 +44,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     @Override
-    public ArrayList<Task> getHistory() {
+    public List<Task> getHistory() {
         return getTasks();
     }
 
@@ -59,8 +57,8 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
     }
 
-    private ArrayList<Task> getTasks() {
-        ArrayList<Task> listTask = new ArrayList<>();
+    private List<Task> getTasks() {
+        List<Task> listTask = new ArrayList<>();
         for (Node<Task> taskNode: historySearchTask.values()) {
             listTask.add(taskNode.data);
         }
@@ -87,17 +85,11 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         InMemoryHistoryManager that = (InMemoryHistoryManager) o;
-        return Objects.equals(historySearchTask, that.historySearchTask);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(historySearchTask);
+        return size == that.size && Objects.equals(historySearchTask, that.historySearchTask) && Objects.equals(head, that.head) && Objects.equals(tail, that.tail);
     }
 }
