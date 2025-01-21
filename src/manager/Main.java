@@ -1,7 +1,6 @@
 package manager;
 
-import historyManager.HistoryManager;
-import historyManager.InMemoryHistoryManager;
+import historymanager.*;
 import task.*;
 
 public class Main {
@@ -110,6 +109,49 @@ public class Main {
         System.out.println(manager.getSubTaskById(idSubtask2));
         System.out.println(manager.getEpicById(idEpic2));
         System.out.println(manager.getSubTaskById(idSubtask3));
+
+        System.out.println("----------------------------------");
+        System.out.println("----------------------------------");
+
+        InMemoryTaskManager manager2 = new InMemoryTaskManager();
+
+        Task testTask1 = new Task("testTask1", "testTask1", Status.NEW);
+        Task testTask2 = new Task("testTask2", "testTask2", Status.NEW);
+        Epic testEpic1 = new Epic("testEpic1", "testEpic1");
+        Epic testEpic2 = new Epic("testEpic2", "testEpic2");
+        manager2.createEpic(testEpic2);
+        Subtask testSubtask1 = new Subtask("testSubtask1", "testSubtask1", Status.NEW, testEpic2.getIdTask());
+        Subtask testSubtask2 = new Subtask("testSubtask2", "testSubtask2", Status.NEW, testEpic2.getIdTask());
+        Subtask testSubtask3 = new Subtask("testSubtask3", "testSubtask3", Status.NEW, testEpic2.getIdTask());
+
+        manager2.createTask(testTask1);
+        manager2.createTask(testTask2);
+        manager2.createEpic(testEpic1);
+        manager2.createSubTask(testSubtask1);
+        manager2.createSubTask(testSubtask2);
+        manager2.createSubTask(testSubtask3);
+
+        manager2.getTaskById(testTask1.getIdTask());
+        manager2.getTaskById(testTask2.getIdTask());
+        System.out.println(manager2.getHistory());
+        System.out.println(manager2.getHistory().size());
+        manager2.getEpicById(testEpic1.getIdTask());
+        manager2.getEpicById(testEpic2.getIdTask());
+        manager2.getSubTaskById(testSubtask1.getIdTask());
+        manager2.getTaskById(testTask2.getIdTask());
+        manager2.getTaskById(testTask2.getIdTask());
+        manager2.getSubTaskById(testSubtask1.getIdTask());
+        System.out.println(manager2.getHistory());
+        System.out.println(manager2.getHistory().size());
+        manager2.getSubTaskById(testSubtask2.getIdTask());
+        manager2.getSubTaskById(testSubtask3.getIdTask());
+        manager2.deleteTaskById(testTask1.getIdTask());
+        System.out.println(manager2.getHistory());
+        System.out.println(manager2.getHistory().size());
+        manager2.deleteEpicById(testEpic2.getIdTask());
+        System.out.println(manager2.getHistory());
+        System.out.println(manager2.getHistory().size());
+
     }
 
     private static void printAllTasks(TaskManager manager) {
