@@ -56,7 +56,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     }
 
     @Override
-    public void removeAllTask(){
+    public void removeAllTask() {
         super.removeAllTask();
         save();
     }
@@ -160,7 +160,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
             String[] fileLines2 = allFile.split("\n");
             String[] fileLines1 = new String[fileLines2.length - 1];
             for (int i = 0; i < fileLines1.length; i++) {
-                fileLines1[i] = fileLines2[i+1];
+                fileLines1[i] = fileLines2[i + 1];
             }
             String[] fileLines = new String[fileLines1.length];
 
