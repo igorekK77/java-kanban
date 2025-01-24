@@ -41,17 +41,17 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     }
 
     private String toString(Task task) {
-        return String.format("%d,%s,%s,%s,%s,", task.getIdTask(), taskTypes.TASK, task.getNameTask(),
+        return String.format("%d,%s,%s,%s,%s,", task.getIdTask(), TaskTypes.TASK, task.getNameTask(),
                 task.getStatus(), task.getDescriptionTask());
     }
 
     private String toString(Subtask subtask) {
-        return String.format("%d,%s,%s,%s,%s,%s,", subtask.getIdTask(), taskTypes.SUBTASK, subtask.getNameTask(),
+        return String.format("%d,%s,%s,%s,%s,%s,", subtask.getIdTask(), TaskTypes.SUBTASK, subtask.getNameTask(),
                 subtask.getStatus(), subtask.getDescriptionTask(), subtask.getEpicId());
     }
 
     private String toString(Epic epic) {
-        return String.format("%d,%s,%s,%s,%s,", epic.getIdTask(), taskTypes.EPIC, epic.getNameTask(),
+        return String.format("%d,%s,%s,%s,%s,", epic.getIdTask(), TaskTypes.EPIC, epic.getNameTask(),
                 epic.getStatus(), epic.getDescriptionTask());
     }
 
