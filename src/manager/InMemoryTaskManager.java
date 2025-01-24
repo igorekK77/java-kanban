@@ -14,6 +14,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     private int idCounter = 0;
 
+
     @Override
     public List<Task> getAllTask() {
         List<Task> allTask = new ArrayList<>();

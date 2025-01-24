@@ -1,6 +1,6 @@
 package historymanager;
 
-import task.Task;
+import task.*;
 
 import java.util.*;
 
