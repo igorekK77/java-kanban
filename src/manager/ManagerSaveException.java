@@ -1,6 +1,6 @@
 package manager;
 
-public class ManagerSaveException extends RuntimeException{
+public class ManagerSaveException extends RuntimeException {
 
     private String message = "";
 
