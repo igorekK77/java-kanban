@@ -1,5 +1,7 @@
 package task;
 
+import manager.TaskTypes;
+
 import java.util.Objects;
 
 public class Subtask extends Task {
@@ -16,13 +18,8 @@ public class Subtask extends Task {
 
     @Override
     public String toString() {
-        return "Task.Subtask{" +
-                "nameTask='" + getNameTask() + '\'' +
-                ", descriptionTask='" + getDescriptionTask() + '\'' +
-                ", idTask=" + getIdTask() +
-                ", status=" + getStatus() +
-                ", epicId=" + getEpicId() +
-                '}';
+        return String.format("%d,%s,%s,%s,%s,%s,", getIdTask(), TaskTypes.SUBTASK, getNameTask(),
+                getStatus(), getDescriptionTask(), getEpicId());
     }
 
     @Override

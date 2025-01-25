@@ -1,5 +1,6 @@
 import manager.FileBackedTaskManager;
 import manager.Managers;
+import manager.TaskManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,13 +34,13 @@ public class FileBackedTaskManagerTest {
     @Test
     public void checkSavingEmptyFile() {
         fileBackedTaskManager.createTask(task1);
-        FileBackedTaskManager fileBackedTaskManager1 = Managers.getFileBackedTaskManager(file);
+        TaskManager fileBackedTaskManager1 = Managers.getDefault(file);
         Assertions.assertEquals(task1, fileBackedTaskManager1.getAllTask().get(0));
     }
 
     @Test
     public void checkUploadingEmptyFile() {
-        FileBackedTaskManager fileBackedTaskManager1 = Managers.getFileBackedTaskManager(file);
+        TaskManager fileBackedTaskManager1 = Managers.getDefault(file);
         Assertions.assertEquals(0, fileBackedTaskManager1.getAllSubTask().size());
         Assertions.assertEquals(0, fileBackedTaskManager1.getAllTask().size());
         Assertions.assertEquals(0, fileBackedTaskManager1.getAllEpic().size());
@@ -72,16 +73,11 @@ public class FileBackedTaskManagerTest {
         Subtask subtask = new Subtask("subtask2", "subtask2", Status.NEW, epic1.getIdTask());
         fileBackedTaskManager.createSubTask(subtask);
 
-        FileBackedTaskManager fileBackedTaskManager1 = Managers.getFileBackedTaskManager(file);
-        Assertions.assertEquals(task1.getNameTask(),fileBackedTaskManager1.getAllTask().get(0).getNameTask());
-        Assertions.assertEquals(task1.getDescriptionTask(), fileBackedTaskManager1.getAllTask().get(0).getDescriptionTask());
-        Assertions.assertEquals(task1.getStatus(), fileBackedTaskManager1.getAllTask().get(0).getStatus());
+        TaskManager fileBackedTaskManager1 = Managers.getDefault(file);
 
-        Assertions.assertEquals(epic1.getNameTask(), fileBackedTaskManager1.getAllEpic().get(0).getNameTask());
-        Assertions.assertEquals(epic1.getDescriptionTask(), fileBackedTaskManager1.getAllEpic().get(0).getDescriptionTask());
-
-        Assertions.assertEquals(subtask.getNameTask(), fileBackedTaskManager1.getAllSubTask().get(0).getNameTask());
-        Assertions.assertEquals(subtask.getDescriptionTask(), fileBackedTaskManager1.getAllSubTask().get(0).getDescriptionTask());
+        Assertions.assertEquals(fileBackedTaskManager.getAllTask(), fileBackedTaskManager1.getAllTask());
+        Assertions.assertEquals(fileBackedTaskManager.getAllSubTask(), fileBackedTaskManager1.getAllSubTask());
+        Assertions.assertEquals(fileBackedTaskManager.getAllEpic(), fileBackedTaskManager1.getAllEpic());
 
     }
 }

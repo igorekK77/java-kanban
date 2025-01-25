@@ -18,7 +18,7 @@ class InMemoryTaskManagerTest {
 
     @BeforeEach
     public void beforeEach() {
-        inMemoryTaskManager = Managers.getDefault();
+        inMemoryTaskManager = Managers.getInMemoryTaskManager();
         epic1 = new Epic("Epic1", "DEpic1");
     }
 
@@ -58,7 +58,7 @@ class InMemoryTaskManagerTest {
 
     @Test
     public void utilityClassReturnsInitializedAndReadyToUseInstanceOfInMemoryTaskManager() {
-        TaskManager taskManager = Managers.getDefault();
+        TaskManager taskManager = Managers.getInMemoryTaskManager();
         InMemoryTaskManager testTaskManager = new InMemoryTaskManager();
         Assertions.assertEquals(testTaskManager, taskManager);
     }
