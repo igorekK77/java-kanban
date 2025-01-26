@@ -113,9 +113,14 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         save();
     }
 
+    private int generatorId = 0;
+
     private void createTaskFromString(String[] elements) {
         Task task = new Task(elements[2], elements[4], Status.valueOf(elements[3]));
         idCounter = Integer.parseInt(elements[0]);
+        if (idCounter > generatorId) {
+            generatorId = idCounter;
+        }
         super.createTask(task);
     }
 
@@ -123,34 +128,19 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         Subtask subtask = new Subtask(elements[2], elements[4], Status.valueOf(elements[3]),
                 Integer.parseInt(elements[5]));
         idCounter = Integer.parseInt(elements[0]);
+        if (idCounter > generatorId) {
+            generatorId = idCounter;
+        }
         super.createSubTask(subtask);
     }
 
     private void createEpicFromString(String[] elements) {
         Epic epic = new Epic(elements[2], elements[4]);
         idCounter = Integer.parseInt(elements[0]);
+        if (idCounter > generatorId) {
+            generatorId = idCounter;
+        }
         super.createEpic(epic);
-    }
-
-    private void searchMaxIdCounter() {
-        int maxIdCounter = 0;
-        for (Integer idTask: tasks.keySet()) {
-            if (idTask > maxIdCounter) {
-                maxIdCounter = idTask;
-            }
-        }
-        for (Integer idSubTask: subtasks.keySet()) {
-            if (idSubTask > maxIdCounter) {
-                maxIdCounter = idSubTask;
-            }
-        }
-        for (Integer idEpic: epics.keySet()) {
-            if (idEpic > maxIdCounter) {
-                maxIdCounter = idEpic;
-            }
-        }
-        maxIdCounter++;
-        idCounter = maxIdCounter;
     }
 
     public static FileBackedTaskManager loadFromFile(File file) {
@@ -199,7 +189,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     fileBackedTaskManager.createEpicFromString(elements);
                 }
             }
-            fileBackedTaskManager.searchMaxIdCounter();
+            fileBackedTaskManager.generatorId++;
+            fileBackedTaskManager.idCounter = fileBackedTaskManager.generatorId;
         } catch (IOException e) {
             e.printStackTrace();
         } catch (NegativeArraySizeException ne) {
@@ -210,7 +201,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     public static void main(String[] args) {
         File file1 = new File("C:\\variousFolders\\codeJava\\java-kanban\\taskStorage.txt");
-        TaskManager fileBackedTaskManager1 = new FileBackedTaskManager(file1);
+        TaskManager fileBackedTaskManager1 = Managers.getDefault(file1);
         Task testTask1 = new Task("testTask1", "testTask1", Status.NEW);
         Epic testEpic1 = new Epic("testEpic1", "testEpic1");
         fileBackedTaskManager1.createEpic(testEpic1);
@@ -231,6 +222,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         System.out.println(fileBackedTaskManager1.getTaskById(testTask1.getIdTask()));
         System.out.println(fileBackedTaskManager1.getEpicById(epic2.getIdTask()));
         System.out.println(fileBackedTaskManager1.getSubTaskById(subtask1.getIdTask()));
+
 
     }
 

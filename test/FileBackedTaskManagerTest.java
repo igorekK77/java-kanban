@@ -1,5 +1,4 @@
 import manager.FileBackedTaskManager;
-import manager.Managers;
 import manager.TaskManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -34,13 +33,13 @@ public class FileBackedTaskManagerTest {
     @Test
     public void checkSavingEmptyFile() {
         fileBackedTaskManager.createTask(task1);
-        TaskManager fileBackedTaskManager1 = Managers.getDefault(file);
+        TaskManager fileBackedTaskManager1 = FileBackedTaskManager.loadFromFile(file);
         Assertions.assertEquals(task1, fileBackedTaskManager1.getAllTask().get(0));
     }
 
     @Test
     public void checkUploadingEmptyFile() {
-        TaskManager fileBackedTaskManager1 = Managers.getDefault(file);
+        TaskManager fileBackedTaskManager1 = FileBackedTaskManager.loadFromFile(file);
         Assertions.assertEquals(0, fileBackedTaskManager1.getAllSubTask().size());
         Assertions.assertEquals(0, fileBackedTaskManager1.getAllTask().size());
         Assertions.assertEquals(0, fileBackedTaskManager1.getAllEpic().size());
@@ -73,7 +72,7 @@ public class FileBackedTaskManagerTest {
         Subtask subtask = new Subtask("subtask2", "subtask2", Status.NEW, epic1.getIdTask());
         fileBackedTaskManager.createSubTask(subtask);
 
-        TaskManager fileBackedTaskManager1 = Managers.getDefault(file);
+        TaskManager fileBackedTaskManager1 = FileBackedTaskManager.loadFromFile(file);
 
         Assertions.assertEquals(fileBackedTaskManager.getAllTask(), fileBackedTaskManager1.getAllTask());
         Assertions.assertEquals(fileBackedTaskManager.getAllSubTask(), fileBackedTaskManager1.getAllSubTask());
