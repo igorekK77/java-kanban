@@ -4,9 +4,7 @@ import manager.TaskTypes;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.Objects;
-import java.util.function.BiFunction;
 
 public class Task {
     protected String nameTask;
