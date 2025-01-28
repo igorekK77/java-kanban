@@ -181,16 +181,17 @@ public class InMemoryTaskManager implements TaskManager {
         if (updateSubTask.getStartTime() != null) {
             prioritizedTasks.stream()
                     .peek(task -> {
-                        if (isTimeSegmentsIntersect(updateSubTask,task)) {
+                        if (isTimeSegmentsIntersect(updateSubTask, task)) {
                             flag.put(updateSubTask, true);
                         }
                     })
                     .findFirst();
             if (!flag.containsKey(updateSubTask)) {
                 prioritizedTasks.add(updateSubTask);
-            } 
+            }
         }
     }
+
 
     private void updateEpicStatus(Subtask updateSubTask) {
         Epic epic = epicSearchByIdInsideTheClass(updateSubTask.getEpicId());
