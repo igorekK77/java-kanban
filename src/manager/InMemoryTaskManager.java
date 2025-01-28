@@ -69,7 +69,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (newTask.getStartTime() != null) {
             prioritizedTasks.stream()
                             .peek(task -> {
-                                if (isTimeSegmentsIntersect(newTask,task)){
+                                if (isTimeSegmentsIntersect(newTask,task)) {
                                     flag.put(newTask, true);
                                 }
                             })
@@ -89,7 +89,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (updateTask.getStartTime() != null) {
             prioritizedTasks.stream()
                     .peek(task -> {
-                        if (isTimeSegmentsIntersect(updateTask,task)){
+                        if (isTimeSegmentsIntersect(updateTask,task)) {
                             flag.put(updateTask, true);
                         }
                     })
@@ -148,7 +148,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (newSubTask.getStartTime() != null) {
             prioritizedTasks.stream()
                     .peek(task -> {
-                        if (isTimeSegmentsIntersect(newSubTask,task)){
+                        if (isTimeSegmentsIntersect(newSubTask,task)) {
                             flag.put(newSubTask, true);
                         }
                     })
@@ -181,7 +181,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (updateSubTask.getStartTime() != null) {
             prioritizedTasks.stream()
                     .peek(task -> {
-                        if (isTimeSegmentsIntersect(updateSubTask,task)){
+                        if (isTimeSegmentsIntersect(updateSubTask,task)) {
                             flag.put(updateSubTask, true);
                         }
                     })
@@ -291,7 +291,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (newEpic.getStartTime() != null) {
             prioritizedTasks.stream()
                     .peek(task -> {
-                        if (isTimeSegmentsIntersect(newEpic,task)){
+                        if (isTimeSegmentsIntersect(newEpic,task)) {
                             flag.put(newEpic, true);
                         }
                     })
@@ -317,7 +317,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (updateEpic.getStartTime() != null) {
             prioritizedTasks.stream()
                     .peek(task -> {
-                        if (isTimeSegmentsIntersect(updateEpic,task)){
+                        if (isTimeSegmentsIntersect(updateEpic,task)) {
                             flag.put(updateEpic, true);
                         }
                     })
