@@ -11,6 +11,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
@@ -23,7 +25,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     private void save() {
         try (FileWriter fileWriter = new FileWriter(file, StandardCharsets.UTF_8);
              BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
-            bufferedWriter.write("id,type,name,status,description,epic\n");
+            bufferedWriter.write("id,type,name,status,description,epic,duration,startTime\n");
             for (Task task: super.getAllTask()) {
                 bufferedWriter.write(task.toString() + "\n");
             }
@@ -116,7 +118,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     private int generatorId = 0;
 
     private void createTaskFromString(String[] elements) {
-        Task task = new Task(elements[2], elements[4], Status.valueOf(elements[3]));
+        Task task = new Task(elements[2], elements[4], Status.valueOf(elements[3]),
+                Duration.ofMinutes(Integer.parseInt(elements[5])), LocalDateTime.parse(elements[6]));
         idCounter = Integer.parseInt(elements[0]);
         if (idCounter > generatorId) {
             generatorId = idCounter;
@@ -126,7 +129,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     private void createSubTaskFromString(String[] elements) {
         Subtask subtask = new Subtask(elements[2], elements[4], Status.valueOf(elements[3]),
-                Integer.parseInt(elements[5]));
+                Integer.parseInt(elements[5]), Duration.ofMinutes(Integer.parseInt(elements[6])),
+                LocalDateTime.parse(elements[7]));
         idCounter = Integer.parseInt(elements[0]);
         if (idCounter > generatorId) {
             generatorId = idCounter;
@@ -200,19 +204,21 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     public static void main(String[] args) {
+        LocalDateTime startTime = LocalDateTime.now();
+        Duration duration = Duration.ofMinutes(25);
         File file1 = new File("C:\\variousFolders\\codeJava\\java-kanban\\taskStorage.txt");
         TaskManager fileBackedTaskManager1 = Managers.getDefault(file1);
-        Task testTask1 = new Task("testTask1", "testTask1", Status.NEW);
+        Task testTask1 = new Task("testTask1", "testTask1", Status.NEW, duration, startTime);
         Epic testEpic1 = new Epic("testEpic1", "testEpic1");
         fileBackedTaskManager1.createEpic(testEpic1);
-        Subtask subtask1 = new Subtask("subtask1", "subtask1", Status.NEW, testEpic1.getIdTask());
-        Subtask subtask2 = new Subtask("subtask2", "subtask2", Status.IN_PROGRESS, testEpic1.getIdTask());
+        Subtask subtask1 = new Subtask("subtask1", "subtask1", Status.NEW, testEpic1.getIdTask(), duration, startTime);
+        Subtask subtask2 = new Subtask("subtask2", "subtask2", Status.IN_PROGRESS, testEpic1.getIdTask(), duration, startTime);
         fileBackedTaskManager1.createTask(testTask1);
         fileBackedTaskManager1.createSubTask(subtask1);
         fileBackedTaskManager1.createSubTask(subtask2);
         Epic epic2 = new Epic("epic2", "epic2");
         fileBackedTaskManager1.createEpic(epic2);
-        Subtask subtask3 = new Subtask("subtask3", "subtask3", Status.NEW, epic2.getIdTask());
+        Subtask subtask3 = new Subtask("subtask3", "subtask3", Status.NEW, epic2.getIdTask(), duration, startTime);
         fileBackedTaskManager1.createSubTask(subtask3);
 
         System.out.println(fileBackedTaskManager1.getAllTask());

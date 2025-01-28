@@ -11,11 +11,15 @@ import task.Task;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 public class FileBackedTaskManagerTest {
     private static FileBackedTaskManager fileBackedTaskManager;
     private File file;
-    private static final Task task1 = new Task("Test1", "DTest1", Status.NEW);
+    private static Duration duration = Duration.ofMinutes(25);
+    private static LocalDateTime startTime = LocalDateTime.now();
+    private static final Task task1 = new Task("Test1", "DTest1", Status.NEW, duration, startTime);
     private static Epic epic1 = new Epic("Epic1", "DEpic1");
 
     @BeforeEach
@@ -47,13 +51,13 @@ public class FileBackedTaskManagerTest {
 
     @Test
     public void checkCreationVariousTasksToFile() {
-        Task task2 = new Task("task2", "task2", Status.NEW);
+        Task task2 = new Task("task2", "task2", Status.NEW, duration, startTime);
         Epic epic2 = new Epic("epic2", "epic2");
         fileBackedTaskManager.createTask(task1);
         fileBackedTaskManager.createTask(task2);
         fileBackedTaskManager.createEpic(epic1);
         fileBackedTaskManager.createEpic(epic2);
-        Subtask subtask = new Subtask("subtask2", "subtask2", Status.NEW, epic1.getIdTask());
+        Subtask subtask = new Subtask("subtask2", "subtask2", Status.NEW, epic1.getIdTask(), duration, startTime);
         fileBackedTaskManager.createSubTask(subtask);
 
         Assertions.assertEquals(2, fileBackedTaskManager.loadFromFile(file).getAllTask().size());
@@ -63,13 +67,13 @@ public class FileBackedTaskManagerTest {
 
     @Test
     public void checkSavingVariousTasksToFile() {
-        Task task2 = new Task("task2", "task2", Status.NEW);
+        Task task2 = new Task("task2", "task2", Status.NEW, duration, startTime);
         Epic epic2 = new Epic("epic2", "epic2");
         fileBackedTaskManager.createTask(task1);
         fileBackedTaskManager.createTask(task2);
         fileBackedTaskManager.createEpic(epic1);
         fileBackedTaskManager.createEpic(epic2);
-        Subtask subtask = new Subtask("subtask2", "subtask2", Status.NEW, epic1.getIdTask());
+        Subtask subtask = new Subtask("subtask2", "subtask2", Status.NEW, epic1.getIdTask(), duration, startTime);
         fileBackedTaskManager.createSubTask(subtask);
 
         TaskManager fileBackedTaskManager1 = FileBackedTaskManager.loadFromFile(file);
