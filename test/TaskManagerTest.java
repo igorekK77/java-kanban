@@ -74,7 +74,7 @@ public class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void checkingOutputOfTaskListInOrderOfPriority() {
+    public void checkOutputOfTaskListInOrderOfPriority() {
         inMemoryTaskManager.createTask(task1);
         Task task2 = new Task("task2", "task2", Status.NEW, duration, LocalDateTime.of(2025,
                 1,23,11,30));
@@ -90,7 +90,7 @@ public class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void checkingCorrectCalculationIntersectionOfTaskTimeIntervals() {
+    public void checkCorrectCalculationIntersectionOfTaskTimeIntervals() {
         inMemoryTaskManager.createTask(task1);
         Task task2 = new Task("task2", "task3", Status.NEW, Duration.ofMinutes(15),
                 LocalDateTime.of(2025,1,19,19,30));
@@ -118,7 +118,7 @@ public class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void checkingTheCalculationOfEpicTotalTimeBySubtasks() {
+    public void checkTheCalculationOfEpicTotalTimeBySubtasks() {
         inMemoryTaskManager.createEpic(epic1);
         Subtask subtask1 = new Subtask("subtask1", "subtask1", Status.NEW, epic1.getIdTask(),
                 Duration.ofMinutes(20), LocalDateTime.of(2025,1,11,16,30));
