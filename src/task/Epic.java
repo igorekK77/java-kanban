@@ -52,7 +52,7 @@ public class Epic extends Task {
     }
 
     @Override
-    public LocalDateTime getEndTime( ) {
+    public LocalDateTime getEndTime() {
         if (subtasksEpic.size() == 0) {
             endTime = startTime;
         } else {
