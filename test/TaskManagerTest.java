@@ -66,7 +66,7 @@ public class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void checkCorrectInterceptionExceptionsWhenWorkingWithFiles() {
-        File file1 = new File("C:\\testEmpty.txt");
+        File file1 = new File("");
         Assertions.assertThrows(ManagerSaveException.class, () -> Managers.getDefault(file1).createTask(task1));
         Assertions.assertThrows(ManagerSaveException.class, () -> Managers.getDefault(file1).createEpic(epic1));
         Assertions.assertDoesNotThrow(() -> Managers.getDefault(file).createTask(task1));
