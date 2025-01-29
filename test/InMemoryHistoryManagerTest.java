@@ -1,3 +1,5 @@
+import historymanager.HistoryManager;
+import historymanager.InMemoryHistoryManager;
 import manager.Managers;
 import manager.TaskManager;
 import org.junit.jupiter.api.Assertions;
@@ -26,6 +28,13 @@ public class InMemoryHistoryManagerTest {
     public void beforeEach() {
         inMemoryTaskManager = Managers.getInMemoryTaskManager();
         epic1 = new Epic("Epic1", "DEpic1");
+    }
+
+    @Test
+    public void utilityClassReturnsInitializedAndReadyToUseInstanceOfInMemoryHistoryManager() {
+        HistoryManager historyManager = Managers.getDefaultHistory();
+        InMemoryHistoryManager testHisotyManager = new InMemoryHistoryManager();
+        Assertions.assertEquals(testHisotyManager, historyManager);
     }
 
     @Test
@@ -128,6 +137,24 @@ public class InMemoryHistoryManagerTest {
         checkHistory.add(epic2);
 
         Assertions.assertEquals(checkHistory, inMemoryTaskManager.getHistory());
+    }
+
+    @Test
+    public void checkTheWorkTaskBrowsingHistory() {
+        inMemoryTaskManager.createTask(task1);
+        inMemoryTaskManager.createEpic(epic1);
+        Subtask subtask1 = new Subtask("SubTask1", "DSubTask1", Status.NEW, epic1.getIdTask(), duration, startTime);
+        inMemoryTaskManager.createSubTask(subtask1);
+
+        inMemoryTaskManager.getTaskById(task1.getIdTask());
+        inMemoryTaskManager.getEpicById(epic1.getIdTask());
+        inMemoryTaskManager.getSubTaskById(subtask1.getIdTask());
+        ArrayList<Task> checkingTheHistory = new ArrayList<>();
+        checkingTheHistory.add(task1);
+        checkingTheHistory.add(epic1);
+        checkingTheHistory.add(subtask1);
+
+        Assertions.assertEquals(checkingTheHistory, inMemoryTaskManager.getHistory());
     }
 
 }

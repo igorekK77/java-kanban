@@ -11,11 +11,11 @@ public class Epic extends Task {
 
     private List<Subtask> subtasksEpic = new ArrayList<>();
     private LocalDateTime endTime;
-    private Duration duration = Duration.ofMinutes(0);
-    private LocalDateTime startTime = LocalDateTime.MIN;
 
     public Epic(String nameTask, String descriptionTask) {
         super(nameTask, descriptionTask, Status.NEW);
+        setDuration(Duration.ofMinutes(0));
+        setStartTime(LocalDateTime.MIN);
     }
 
     @Override

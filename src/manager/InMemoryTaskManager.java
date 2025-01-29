@@ -9,16 +9,8 @@ public class InMemoryTaskManager implements TaskManager {
     protected Map<Integer, Task> tasks = new HashMap<>();
     protected Map<Integer, Subtask> subtasks = new HashMap<>();
     protected Map<Integer, Epic> epics = new HashMap<>();
-    protected Set<Task> prioritizedTasks = new TreeSet<>((task1, task2) -> {
-        if (task1.getStartTime().isAfter(task2.getStartTime())) {
-            return 1;
-        } else if (task1.getStartTime().isBefore(task2.getStartTime())) {
-            return -1;
-        } else {
-            return 0;
-        }
-    });
-
+    protected Set<Task> prioritizedTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime,
+            Comparator.nullsLast(Comparator.naturalOrder())));
     private HistoryManager historyManager = Managers.getDefaultHistory();
 
     protected int idCounter = 0;
@@ -58,6 +50,12 @@ public class InMemoryTaskManager implements TaskManager {
         } else {
             return true;
         }
+
+    }
+
+    private boolean isNotIntersectionContain(Task newTask) {
+        return prioritizedTasks.stream()
+                .noneMatch(task -> isTimeSegmentsIntersect(newTask, task));
     }
 
     @Override
@@ -65,38 +63,18 @@ public class InMemoryTaskManager implements TaskManager {
         tasks.put(idCounter, newTask);
         newTask.setIdTask(idCounter);
         idCounter++;
-        Map<Task, Boolean> flag = new HashMap<>();
-        if (newTask.getStartTime() != null) {
-            prioritizedTasks.stream()
-                            .peek(task -> {
-                                if (isTimeSegmentsIntersect(newTask,task)) {
-                                    flag.put(newTask, true);
-                                }
-                            })
-                            .findFirst();
-            if (!flag.containsKey(newTask)) {
-                prioritizedTasks.add(newTask);
-            }
+        if (isNotIntersectionContain(newTask)) {
+            prioritizedTasks.add(newTask);
         }
         return newTask;
     }
 
     @Override
-    public void updateTask(int id, Task updateTask) {
-        prioritizedTasks.remove(tasks.get(id));
-        tasks.put(id, updateTask);
-        Map<Task, Boolean> flag = new HashMap<>();
-        if (updateTask.getStartTime() != null) {
-            prioritizedTasks.stream()
-                    .peek(task -> {
-                        if (isTimeSegmentsIntersect(updateTask,task)) {
-                            flag.put(updateTask, true);
-                        }
-                    })
-                    .findFirst();
-            if (!flag.containsKey(updateTask)) {
-                prioritizedTasks.add(updateTask);
-            }
+    public void updateTask(Task updateTask) {
+        prioritizedTasks.remove(tasks.get(updateTask.getIdTask()));
+        tasks.put(updateTask.getIdTask(), updateTask);
+        if (isNotIntersectionContain(updateTask)) {
+            prioritizedTasks.add(updateTask);
         }
     }
 
@@ -144,18 +122,8 @@ public class InMemoryTaskManager implements TaskManager {
         subtasks.put(idCounter, newSubTask);
         newSubTask.setIdTask(idCounter);
         updateEpicStatus(newSubTask);
-        Map<Task, Boolean> flag = new HashMap<>();
-        if (newSubTask.getStartTime() != null) {
-            prioritizedTasks.stream()
-                    .peek(task -> {
-                        if (isTimeSegmentsIntersect(newSubTask,task)) {
-                            flag.put(newSubTask, true);
-                        }
-                    })
-                    .findFirst();
-            if (!flag.containsKey(newSubTask)) {
-                prioritizedTasks.add(newSubTask);
-            }
+        if (isNotIntersectionContain(newSubTask)) {
+            prioritizedTasks.add(newSubTask);
         }
         idCounter++;
         Epic epic = epicSearchByIdInsideTheClass(newSubTask.getEpicId());
@@ -173,22 +141,12 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void updateSubTask(int id, Subtask updateSubTask) {
-        prioritizedTasks.remove(subtasks.get(id));
-        subtasks.put(id, updateSubTask);
+    public void updateSubTask(Subtask updateSubTask) {
+        prioritizedTasks.remove(subtasks.get(updateSubTask.getIdTask()));
+        subtasks.put(updateSubTask.getIdTask(), updateSubTask);
         updateEpicStatus(updateSubTask);
-        Map<Task, Boolean> flag = new HashMap<>();
-        if (updateSubTask.getStartTime() != null) {
-            prioritizedTasks.stream()
-                    .peek(task -> {
-                        if (isTimeSegmentsIntersect(updateSubTask, task)) {
-                            flag.put(updateSubTask, true);
-                        }
-                    })
-                    .findFirst();
-            if (!flag.containsKey(updateSubTask)) {
-                prioritizedTasks.add(updateSubTask);
-            }
+        if (isNotIntersectionContain(updateSubTask)) {
+            prioritizedTasks.add(updateSubTask);
         }
     }
 
@@ -288,19 +246,6 @@ public class InMemoryTaskManager implements TaskManager {
         epics.put(idCounter, newEpic);
         newEpic.setIdTask(idCounter);
         idCounter++;
-        Map<Task, Boolean> flag = new HashMap<>();
-        if (newEpic.getStartTime() != null) {
-            prioritizedTasks.stream()
-                    .peek(task -> {
-                        if (isTimeSegmentsIntersect(newEpic,task)) {
-                            flag.put(newEpic, true);
-                        }
-                    })
-                    .findFirst();
-            if (!flag.containsKey(newEpic)) {
-                prioritizedTasks.add(newEpic);
-            }
-        }
         return newEpic;
     }
 
@@ -311,27 +256,13 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void updateEpic(int id, Epic updateEpic) {
-        prioritizedTasks.remove(epics.get(id));
-        epics.put(id, updateEpic);
-        Map<Task, Boolean> flag = new HashMap<>();
-        if (updateEpic.getStartTime() != null) {
-            prioritizedTasks.stream()
-                    .peek(task -> {
-                        if (isTimeSegmentsIntersect(updateEpic,task)) {
-                            flag.put(updateEpic, true);
-                        }
-                    })
-                    .findFirst();
-            if (!flag.containsKey(updateEpic)) {
-                prioritizedTasks.add(updateEpic);
-            }
-        }
+    public void updateEpic(Epic updateEpic) {
+        prioritizedTasks.remove(epics.get(updateEpic.getIdTask()));
+        epics.put(updateEpic.getIdTask(), updateEpic);
     }
 
     @Override
     public void deleteEpicById(int id) {
-        prioritizedTasks.remove(epics.get(id));
         epics.remove(id);
         historyManager.remove(id);
         List<Integer> subTaskIdToDelete = subtasks.values().stream()
@@ -341,9 +272,6 @@ public class InMemoryTaskManager implements TaskManager {
 
         for (Integer integer: subTaskIdToDelete) {
             if (subtasks.containsKey(integer)) {
-                if (prioritizedTasks.contains(subtasks.get(integer))) {
-                    prioritizedTasks.remove(subtasks.get(integer));
-                }
                 subtasks.remove(integer);
                 historyManager.remove(integer);
             }
@@ -356,8 +284,8 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Set<Task> getPrioritizedTasks() {
-        return prioritizedTasks;
+    public List<Task> getPrioritizedTasks() {
+        return new ArrayList<>(prioritizedTasks);
     }
 
 

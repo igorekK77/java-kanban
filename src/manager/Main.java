@@ -62,18 +62,23 @@ public class Main {
 
         //Обновление
         task1.setStatus(Status.IN_PROGRESS);
-        manager.updateTask(idTask1, task1);
+        task1.setIdTask(idTask1);
+        manager.updateTask(task1);
         task2.setStatus(Status.DONE);
-        manager.updateTask(idTask2, task2);
+        task2.setIdTask(idTask2);
+        manager.updateTask(task2);
 
         subtask1.setStatus(Status.IN_PROGRESS);
-        manager.updateSubTask(idSubtask1, subtask1);
+        subtask1.setIdTask(idSubtask1);
+        manager.updateSubTask(subtask1);
 
         subtask2.setStatus(Status.DONE);
-        manager.updateSubTask(idSubtask2, subtask2);
+        subtask2.setIdTask(idSubtask2);
+        manager.updateSubTask(subtask2);
 
         subtask3.setStatus(Status.DONE);
-        manager.updateSubTask(idSubtask3, subtask3);
+        subtask3.setIdTask(idSubtask3);
+        manager.updateSubTask(subtask3);
 
         System.out.println();
         System.out.println();
