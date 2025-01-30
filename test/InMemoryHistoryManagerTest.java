@@ -14,10 +14,12 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class InMemoryHistoryManagerTest {
     private static TaskManager inMemoryTaskManager;
+    private static HistoryManager inMemoryHistoryManager;
     private static Duration duration = Duration.ofMinutes(25);
     private static LocalDateTime startTime = LocalDateTime.now();
 
@@ -28,7 +30,82 @@ public class InMemoryHistoryManagerTest {
     public void beforeEach() {
         inMemoryTaskManager = Managers.getInMemoryTaskManager();
         epic1 = new Epic("Epic1", "DEpic1");
+        inMemoryHistoryManager = new InMemoryHistoryManager();
     }
+
+    @Test
+    public void checkForAddingToTheHistory() {
+        Task task = new Task("task", "task", Status.NEW, duration, LocalDateTime.of(2025,
+                1,23,11,30));
+        task.setIdTask(0);
+        inMemoryHistoryManager.add(task);
+        Epic epic = new Epic("epic", "epic");
+        epic.setIdTask(1);
+        inMemoryHistoryManager.add(epic);
+        Subtask subtask1 = new Subtask("subtask1", "subtask1", Status.NEW, epic1.getIdTask(),
+                duration, LocalDateTime.of(2024,6,25,21,20));
+        subtask1.setIdTask(2);
+        inMemoryHistoryManager.add(subtask1);
+
+        List<Task> checkAddTask = new ArrayList<>();
+        checkAddTask.add(task);
+        checkAddTask.add(epic);
+        checkAddTask.add(subtask1);
+        Assertions.assertEquals(checkAddTask, inMemoryHistoryManager.getHistory());
+    }
+
+    @Test
+    public void checkForRemoveToTheHistory() {
+        Task task = new Task("task", "task", Status.NEW, duration, LocalDateTime.of(2025,
+                1,23,11,30));
+        task.setIdTask(0);
+        inMemoryHistoryManager.add(task);
+        Epic epic = new Epic("epic", "epic");
+        epic.setIdTask(1);
+        inMemoryHistoryManager.add(epic);
+        Subtask subtask1 = new Subtask("subtask1", "subtask1", Status.NEW, epic1.getIdTask(),
+                duration, LocalDateTime.of(2024,6,25,21,20));
+        subtask1.setIdTask(2);
+        inMemoryHistoryManager.add(subtask1);
+        Task task2 = new Task("task2", "task2", Status.NEW, duration, LocalDateTime.of(2025,
+                1,24,17,55));
+        task2.setIdTask(3);
+        inMemoryHistoryManager.add(task2);
+
+        inMemoryHistoryManager.remove(subtask1.getIdTask());
+        inMemoryHistoryManager.remove(epic.getIdTask());
+
+        List<Task> checkAddTask = new ArrayList<>();
+        checkAddTask.add(task);
+        checkAddTask.add(task2);
+
+        Assertions.assertEquals(checkAddTask, inMemoryHistoryManager.getHistory());
+    }
+
+    @Test
+    public void checkGetHistory() {
+        Task task = new Task("task", "task", Status.NEW, duration, LocalDateTime.of(2025,
+                1,23,11,30));
+        task.setIdTask(0);
+        inMemoryHistoryManager.add(task);
+        Epic epic = new Epic("epic", "epic");
+        epic.setIdTask(1);
+        inMemoryHistoryManager.add(epic);
+        Subtask subtask1 = new Subtask("subtask1", "subtask1", Status.NEW, epic1.getIdTask(),
+                duration, LocalDateTime.of(2024,6,25,21,20));
+        subtask1.setIdTask(2);
+        inMemoryHistoryManager.add(subtask1);
+        Task task2 = new Task("task2", "task2", Status.NEW, duration, LocalDateTime.of(2025,
+                1,24,17,55));
+        task2.setIdTask(3);
+        inMemoryHistoryManager.add(task2);
+
+        Assertions.assertEquals(task, inMemoryHistoryManager.getHistory().get(0));
+        Assertions.assertEquals(epic, inMemoryHistoryManager.getHistory().get(1));
+        Assertions.assertEquals(subtask1, inMemoryHistoryManager.getHistory().get(2));
+        Assertions.assertEquals(task2, inMemoryHistoryManager.getHistory().get(3));
+    }
+
 
     @Test
     public void utilityClassReturnsInitializedAndReadyToUseInstanceOfInMemoryHistoryManager() {
