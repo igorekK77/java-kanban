@@ -2,6 +2,8 @@ package task;
 
 import manager.TaskTypes;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Task {
@@ -9,8 +11,19 @@ public class Task {
     protected String descriptionTask;
     protected int idTask;
     protected Status status;
+    protected Duration duration;
+    protected LocalDateTime startTime;
 
-    public Task(String nameTask, String descriptionTask, Status status) {
+
+    public Task(String nameTask, String descriptionTask, Status status, Duration duration, LocalDateTime startTime) {
+        this.nameTask = nameTask;
+        this.descriptionTask = descriptionTask;
+        this.status = status;
+        this.duration = duration;
+        this.startTime = startTime;
+    }
+
+    protected Task(String nameTask, String descriptionTask, Status status) {
         this.nameTask = nameTask;
         this.descriptionTask = descriptionTask;
         this.status = status;
@@ -48,11 +61,32 @@ public class Task {
         this.status = status;
     }
 
+    public LocalDateTime getEndTime() {
+        return startTime.plus(duration);
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
     @Override
     public String toString() {
-        return String.format("%d,%s,%s,%s,%s,", getIdTask(), TaskTypes.TASK, getNameTask(),
-                getStatus(), getDescriptionTask());
+        return String.format("%d,%s,%s,%s,%s,%d,%s", getIdTask(), TaskTypes.TASK, getNameTask(),
+                getStatus(), getDescriptionTask(), duration.toMinutes(), startTime.toString());
     }
+
 
     @Override
     public boolean equals(Object o) {
@@ -64,7 +98,7 @@ public class Task {
 
     @Override
     public int hashCode() {
-        return Objects.hash(nameTask, descriptionTask, idTask, status);
+        return Objects.hashCode(idTask);
     }
 }
 

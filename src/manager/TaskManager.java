@@ -14,7 +14,7 @@ public interface TaskManager {
 
     Task createTask(Task newTask);
 
-    void updateTask(int id, Task updateTask);
+    void updateTask(Task updateTask);
 
     void deleteTaskById(int id);
 
@@ -26,7 +26,7 @@ public interface TaskManager {
 
     Subtask createSubTask(Subtask newSubTask);
 
-    void updateSubTask(int id, Subtask updateSubTask);
+    void updateSubTask(Subtask updateSubTask);
 
     void deleteSubTaskById(int id);
 
@@ -40,10 +40,12 @@ public interface TaskManager {
 
     List<Subtask> getEpicSubtask(int epicid);
 
-    void updateEpic(int id, Epic updateEpic);
+    void updateEpic(Epic updateEpic);
 
     void deleteEpicById(int id);
 
     List<Task> getHistory();
+
+    List<Task> getPrioritizedTasks();
 
 }

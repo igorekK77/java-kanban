@@ -1,4 +1,6 @@
 import manager.FileBackedTaskManager;
+import manager.ManagerSaveException;
+import manager.Managers;
 import manager.TaskManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -11,17 +13,22 @@ import task.Task;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
-public class FileBackedTaskManagerTest {
-    private static FileBackedTaskManager fileBackedTaskManager;
+public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
     private File file;
-    private static final Task task1 = new Task("Test1", "DTest1", Status.NEW);
+    private static Duration duration = Duration.ofMinutes(25);
+    private static LocalDateTime startTime = LocalDateTime.now();
+    private static final Task task1 = new Task("Test1", "DTest1", Status.NEW, duration, startTime);
     private static Epic epic1 = new Epic("Epic1", "DEpic1");
 
     @BeforeEach
-    public void beforeEach() throws IOException {
+    public void beforeEachFileTaskManagerTest() throws IOException {
         file = File.createTempFile("test", ".txt");
-        fileBackedTaskManager = new FileBackedTaskManager(file);
+        taskManager = new FileBackedTaskManager(file);
         epic1 = new Epic("Epic1", "DEpic1");
     }
 
@@ -32,7 +39,7 @@ public class FileBackedTaskManagerTest {
 
     @Test
     public void checkSavingEmptyFile() {
-        fileBackedTaskManager.createTask(task1);
+        taskManager.createTask(task1);
         TaskManager fileBackedTaskManager1 = FileBackedTaskManager.loadFromFile(file);
         Assertions.assertEquals(task1, fileBackedTaskManager1.getAllTask().get(0));
     }
@@ -47,36 +54,63 @@ public class FileBackedTaskManagerTest {
 
     @Test
     public void checkCreationVariousTasksToFile() {
-        Task task2 = new Task("task2", "task2", Status.NEW);
+        Task task2 = new Task("task2", "task2", Status.NEW, duration, startTime);
         Epic epic2 = new Epic("epic2", "epic2");
-        fileBackedTaskManager.createTask(task1);
-        fileBackedTaskManager.createTask(task2);
-        fileBackedTaskManager.createEpic(epic1);
-        fileBackedTaskManager.createEpic(epic2);
-        Subtask subtask = new Subtask("subtask2", "subtask2", Status.NEW, epic1.getIdTask());
-        fileBackedTaskManager.createSubTask(subtask);
+        taskManager.createTask(task1);
+        taskManager.createTask(task2);
+        taskManager.createEpic(epic1);
+        taskManager.createEpic(epic2);
+        Subtask subtask = new Subtask("subtask2", "subtask2", Status.NEW, epic1.getIdTask(), duration, startTime);
+        taskManager.createSubTask(subtask);
 
-        Assertions.assertEquals(2, fileBackedTaskManager.loadFromFile(file).getAllTask().size());
-        Assertions.assertEquals(2, fileBackedTaskManager.loadFromFile(file).getAllEpic().size());
-        Assertions.assertEquals(1, fileBackedTaskManager.loadFromFile(file).getAllSubTask().size());
+        Assertions.assertEquals(2, taskManager.loadFromFile(file).getAllTask().size());
+        Assertions.assertEquals(2, taskManager.loadFromFile(file).getAllEpic().size());
+        Assertions.assertEquals(1, taskManager.loadFromFile(file).getAllSubTask().size());
     }
 
     @Test
     public void checkSavingVariousTasksToFile() {
-        Task task2 = new Task("task2", "task2", Status.NEW);
+        Task task2 = new Task("task2", "task2", Status.NEW, duration, startTime);
         Epic epic2 = new Epic("epic2", "epic2");
-        fileBackedTaskManager.createTask(task1);
-        fileBackedTaskManager.createTask(task2);
-        fileBackedTaskManager.createEpic(epic1);
-        fileBackedTaskManager.createEpic(epic2);
-        Subtask subtask = new Subtask("subtask2", "subtask2", Status.NEW, epic1.getIdTask());
-        fileBackedTaskManager.createSubTask(subtask);
+        taskManager.createTask(task1);
+        taskManager.createTask(task2);
+        taskManager.createEpic(epic1);
+        taskManager.createEpic(epic2);
+        Subtask subtask = new Subtask("subtask2", "subtask2", Status.NEW, epic1.getIdTask(), duration, startTime);
+        taskManager.createSubTask(subtask);
 
         TaskManager fileBackedTaskManager1 = FileBackedTaskManager.loadFromFile(file);
+        Assertions.assertEquals(taskManager.getAllTask(), fileBackedTaskManager1.getAllTask());
+        Assertions.assertEquals(taskManager.getAllSubTask(), fileBackedTaskManager1.getAllSubTask());
+        Assertions.assertEquals(taskManager.getAllEpic(), fileBackedTaskManager1.getAllEpic());
+    }
 
-        Assertions.assertEquals(fileBackedTaskManager.getAllTask(), fileBackedTaskManager1.getAllTask());
-        Assertions.assertEquals(fileBackedTaskManager.getAllSubTask(), fileBackedTaskManager1.getAllSubTask());
-        Assertions.assertEquals(fileBackedTaskManager.getAllEpic(), fileBackedTaskManager1.getAllEpic());
+    @Test
+    public void checkCorrectInterceptionExceptionsWhenWorkingWithFiles() {
+        File file1 = new File("");
+        Assertions.assertThrows(ManagerSaveException.class, () -> Managers.getDefault(file1).createTask(task1));
+        Assertions.assertThrows(ManagerSaveException.class, () -> Managers.getDefault(file1).createEpic(epic1));
+        Assertions.assertDoesNotThrow(() -> Managers.getDefault(file).createTask(task1));
+        Assertions.assertDoesNotThrow(() -> Managers.getDefault(file).createEpic(epic1));
+    }
 
+    @Test
+    public void checkingTheSortedListTasksUploadedFromFile() {
+        taskManager.createTask(task1);
+        Task task2 = new Task("task2", "task2", Status.NEW, duration,
+                LocalDateTime.of(2023,11,24,11,56));
+        taskManager.createTask(task2);
+        taskManager.createEpic(epic1);
+        Subtask subtask = new Subtask("subtask2", "subtask2", Status.NEW, epic1.getIdTask(),
+                duration, LocalDateTime.of(2024,5,23,14,20));
+        taskManager.createSubTask(subtask);
+
+        TaskManager fileBackedTaskManager1 = FileBackedTaskManager.loadFromFile(file);
+        List<Task> checkSortedTask = new ArrayList<>();
+        checkSortedTask.add(task2);
+        checkSortedTask.add(subtask);
+        checkSortedTask.add(task1);
+
+        Assertions.assertEquals(checkSortedTask, fileBackedTaskManager1.getPrioritizedTasks());
     }
 }
