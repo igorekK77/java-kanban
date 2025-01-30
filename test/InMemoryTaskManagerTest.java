@@ -12,9 +12,7 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
 
     @Test
     public void utilityClassReturnsInitializedAndReadyToUseInstanceOfInMemoryTaskManager() {
-        TaskManager taskManager = Managers.getInMemoryTaskManager();
-        InMemoryTaskManager testTaskManager = new InMemoryTaskManager();
-        Assertions.assertEquals(testTaskManager, taskManager);
+        Assertions.assertNotNull(Managers.getInMemoryTaskManager());
     }
 
 }
