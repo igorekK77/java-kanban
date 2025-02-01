@@ -31,7 +31,7 @@ public class HttpTaskServer {
 
 
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         httpServer.createContext("/tasks", new TaskHandler());
         httpServer.createContext("/subtasks", new SubTaskHandler());
         httpServer.createContext("/epics", new EpicHandler());
