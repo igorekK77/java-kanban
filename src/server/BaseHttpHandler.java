@@ -24,7 +24,7 @@ public class BaseHttpHandler {
                 httpExchange.sendResponseHeaders(200,0);
                 break;
         }
-        try (OutputStream os = httpExchange.getResponseBody()){
+        try (OutputStream os = httpExchange.getResponseBody()) {
             os.write(resp);
         }
     }
@@ -34,7 +34,7 @@ public class BaseHttpHandler {
         Headers headers = httpExchange.getResponseHeaders();
         headers.add("Content-Type", "application/json;charset=utf-8");
         httpExchange.sendResponseHeaders(404,0);
-        try (OutputStream os = httpExchange.getResponseBody()){
+        try (OutputStream os = httpExchange.getResponseBody()) {
             os.write(resp);
         }
     }
@@ -44,7 +44,7 @@ public class BaseHttpHandler {
         Headers headers = httpExchange.getResponseHeaders();
         headers.add("Content-Type", "application/json;charset=utf-8");
         httpExchange.sendResponseHeaders(406,0);
-        try (OutputStream os = httpExchange.getResponseBody()){
+        try (OutputStream os = httpExchange.getResponseBody()) {
             os.write(resp);
         }
     }
