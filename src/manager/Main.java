@@ -1,9 +1,14 @@
 package manager;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import historymanager.*;
+import server.DurationAdapter;
+import server.LocalDateTimeAdapter;
 import task.*;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class Main {
@@ -181,6 +186,16 @@ public class Main {
         System.out.println(taskManager.getAllSubTask());
         taskManager.deleteSubTaskById(newSubtask1.getIdTask());
         System.out.println(taskManager.getAllSubTask());
+        Epic epic12 = new Epic("tEpic", "tEpic");
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter());
+        gsonBuilder.registerTypeAdapter(Duration.class, new DurationAdapter());
+        gsonBuilder.setPrettyPrinting();
+        Gson gson = gsonBuilder.create();
+        String toJson = gson.toJson(newSubtask2);
+        System.out.println(toJson);
+        Subtask subtask = gson.fromJson(toJson, Subtask.class);
+        System.out.println(subtask);
     }
 
     private static void printAllTasks(TaskManager manager) {

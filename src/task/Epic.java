@@ -15,7 +15,7 @@ public class Epic extends Task {
     public Epic(String nameTask, String descriptionTask) {
         super(nameTask, descriptionTask, Status.NEW);
         setDuration(Duration.ofMinutes(0));
-        setStartTime(LocalDateTime.MIN);
+        setStartTime(LocalDateTime.now());
     }
 
     @Override

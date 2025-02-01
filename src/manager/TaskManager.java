@@ -6,6 +6,10 @@ import task.*;
 import java.util.List;
 
 public interface TaskManager {
+    public void setIdCounter(int idCounter);
+
+    public int getIdCounter();
+
     List<Task> getAllTask();
 
     void removeAllTask();

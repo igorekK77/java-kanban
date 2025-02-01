@@ -15,6 +15,15 @@ public class InMemoryTaskManager implements TaskManager {
 
     protected int idCounter = 0;
 
+    @Override
+    public int getIdCounter() {
+        return idCounter;
+    }
+
+    @Override
+    public void setIdCounter(int idCounter) {
+        this.idCounter = idCounter;
+    }
 
     @Override
     public List<Task> getAllTask() {
