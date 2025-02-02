@@ -13,7 +13,7 @@ public class EpicHandler extends BaseHttpHandler {
     TaskManager taskManager;
 
     public EpicHandler(TaskManager taskManager) {
-        this.taskManager =taskManager;
+        this.taskManager = taskManager;
     }
 
     @Override
