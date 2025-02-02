@@ -1,21 +1,23 @@
 package server;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import manager.TaskManager;
 
 import java.io.IOException;
-import java.time.Duration;
-import java.time.LocalDateTime;
+
 
 public class PrioritizedHandler extends BaseHttpHandler implements HttpHandler {
+    TaskManager taskManager;
+
+    public PrioritizedHandler(TaskManager taskManager) {
+        this.taskManager = taskManager;
+    }
+
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter());
-        gsonBuilder.registerTypeAdapter(Duration.class, new DurationAdapter());
-        Gson gson = gsonBuilder.create();
-        sendText(httpExchange, gson.toJson(HttpTaskServer.taskManager.getPrioritizedTasks()));
+        Gson gson = HttpTaskServer.getGson();
+        sendText(httpExchange, gson.toJson(taskManager.getPrioritizedTasks()));
     }
 }

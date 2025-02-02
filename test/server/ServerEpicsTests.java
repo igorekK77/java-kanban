@@ -93,22 +93,29 @@ public class ServerEpicsTests {
     }
 
     @Test
-    public void testFailedEpics() throws IOException, InterruptedException {
-        URI uri1 = URI.create("http://localhost:8080/epics/0");
-        HttpRequest httpRequest1 = HttpRequest.newBuilder().DELETE().uri(uri1).build();
-        HttpResponse<String> response1 = client.send(httpRequest1, HttpResponse.BodyHandlers.ofString());
-        Assertions.assertEquals(404, response1.statusCode());
+    public void testFailedDeleteEpic() throws IOException, InterruptedException {
+        URI uri = URI.create("http://localhost:8080/epics/0");
+        HttpRequest httpRequest = HttpRequest.newBuilder().DELETE().uri(uri).build();
+        HttpResponse<String> response = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+        Assertions.assertEquals(404, response.statusCode());
+    }
 
-        HttpRequest httpRequest2 = HttpRequest.newBuilder().GET().uri(uri1).build();
-        HttpResponse<String> response2 = client.send(httpRequest2, HttpResponse.BodyHandlers.ofString());
-        Assertions.assertEquals(404, response2.statusCode());
+    @Test
+    public void testFailedGetEpicOnId() throws IOException, InterruptedException {
+        URI uri = URI.create("http://localhost:8080/epics/0");
+        HttpRequest httpRequest = HttpRequest.newBuilder().GET().uri(uri).build();
+        HttpResponse<String> response = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+        Assertions.assertEquals(404, response.statusCode());
+    }
 
+    @Test
+    public void testFailedAddSameEpic() throws IOException, InterruptedException {
         String epicJson = gson.toJson(epic);
-        URI uri2 = URI.create("http://localhost:8080/epics");
-        HttpRequest httpRequest3 = HttpRequest.newBuilder().uri(uri2).POST(HttpRequest.BodyPublishers.ofString(epicJson)).build();
-        HttpResponse<String> respons3 = client.send(httpRequest3, HttpResponse.BodyHandlers.ofString());
-        HttpRequest httpRequest4 = HttpRequest.newBuilder().uri(uri2).POST(HttpRequest.BodyPublishers.ofString(epicJson)).build();
-        HttpResponse<String> response4 = client.send(httpRequest4, HttpResponse.BodyHandlers.ofString());
-        Assertions.assertEquals(406, response4.statusCode());
+        URI uri = URI.create("http://localhost:8080/epics");
+        HttpRequest httpRequest = HttpRequest.newBuilder().uri(uri).POST(HttpRequest.BodyPublishers.ofString(epicJson)).build();
+        HttpResponse<String> respons = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+        HttpRequest httpRequest1 = HttpRequest.newBuilder().uri(uri).POST(HttpRequest.BodyPublishers.ofString(epicJson)).build();
+        HttpResponse<String> response1 = client.send(httpRequest1, HttpResponse.BodyHandlers.ofString());
+        Assertions.assertEquals(406, response1.statusCode());
     }
 }

@@ -110,26 +110,39 @@ public class ServerTasksTests {
     }
 
     @Test
-    public void testFailedTasks() throws IOException, InterruptedException {
-        String taskJson = gson.toJson(task);
+    public void testFailedDeleteTask() throws IOException, InterruptedException {
         URI uri = URI.create("http://localhost:8080/tasks/0");
         HttpRequest httpRequest = HttpRequest.newBuilder().DELETE().uri(uri).build();
         HttpResponse<String> response = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
         Assertions.assertEquals(404, response.statusCode());
 
-        HttpRequest httpRequest1 = HttpRequest.newBuilder().GET().uri(uri).build();
+    }
+
+    @Test
+    public void testFailedAddSameTask() throws IOException, InterruptedException {
+        String taskJson = gson.toJson(task);
+        URI uri = URI.create("http://localhost:8080/tasks");
+        HttpRequest httpRequest = HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString(taskJson)).uri(uri).build();
+        HttpResponse<String> response = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+        HttpRequest httpRequest1 = HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString(taskJson)).uri(uri).build();
         HttpResponse<String> response1 = client.send(httpRequest1, HttpResponse.BodyHandlers.ofString());
-        Assertions.assertEquals(404, response1.statusCode());
+        Assertions.assertEquals(406, response1.statusCode());
+    }
 
-        HttpRequest httpRequest2 = HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString(taskJson)).uri(uri).build();
-        HttpResponse<String> response2 = client.send(httpRequest2, HttpResponse.BodyHandlers.ofString());
-        Assertions.assertEquals(404, response2.statusCode());
+    @Test
+    public void testFailedGetTaskOnId() throws IOException, InterruptedException {
+        URI uri = URI.create("http://localhost:8080/tasks/0");
+        HttpRequest httpRequest = HttpRequest.newBuilder().GET().uri(uri).build();
+        HttpResponse<String> response = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+        Assertions.assertEquals(404, response.statusCode());
+    }
 
-        URI uri1 = URI.create("http://localhost:8080/tasks");
-        HttpRequest httpRequest3 = HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString(taskJson)).uri(uri1).build();
-        HttpResponse<String> response3 = client.send(httpRequest3, HttpResponse.BodyHandlers.ofString());
-        HttpRequest httpRequest4 = HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString(taskJson)).uri(uri1).build();
-        HttpResponse<String> response4 = client.send(httpRequest4, HttpResponse.BodyHandlers.ofString());
-        Assertions.assertEquals(406, response4.statusCode());
+    @Test
+    public void testFailedUpdateTaskWhichNotExist() throws IOException, InterruptedException {
+        String taskJson = gson.toJson(task);
+        URI uri = URI.create("http://localhost:8080/tasks/0");
+        HttpRequest httpRequest = HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString(taskJson)).uri(uri).build();
+        HttpResponse<String> response = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+        Assertions.assertEquals(404, response.statusCode());
     }
 }

@@ -2,14 +2,15 @@ package server;
 
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-public class BaseHttpHandler {
-    private static final Charset standardCharsets = StandardCharsets.UTF_8;
+public abstract class BaseHttpHandler implements HttpHandler {
+    protected static final Charset standardCharsets = StandardCharsets.UTF_8;
 
     protected void sendText(HttpExchange httpExchange, String text) throws IOException {
         byte[] resp = text.getBytes(standardCharsets);

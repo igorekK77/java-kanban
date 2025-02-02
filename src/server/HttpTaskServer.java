@@ -15,13 +15,11 @@ import java.time.LocalDateTime;
 
 
 public class HttpTaskServer {
-
-
-    private static HttpServer httpServer = null;
-    protected static TaskManager taskManager;
+    private static HttpServer httpServer;
+    protected TaskManager taskManager;
 
     public HttpTaskServer(TaskManager taskManager) {
-        HttpTaskServer.taskManager = taskManager;
+        this.taskManager = taskManager;
         try {
             httpServer = HttpServer.create(new InetSocketAddress(8080), 0);
         } catch (IOException e) {
@@ -29,30 +27,24 @@ public class HttpTaskServer {
         }
     }
 
-
-
     public static void main(String[] args) {
-        httpServer.createContext("/tasks", new TaskHandler());
-        httpServer.createContext("/subtasks", new SubTaskHandler());
-        httpServer.createContext("/epics", new EpicHandler());
-        httpServer.createContext("/history", new HistoryHandler());
-        httpServer.createContext("/prioritized", new PrioritizedHandler());
+
     }
 
     public void startServer() {
         httpServer.start();
-        httpServer.createContext("/tasks", new TaskHandler());
-        httpServer.createContext("/subtasks", new SubTaskHandler());
-        httpServer.createContext("/epics", new EpicHandler());
-        httpServer.createContext("/history", new HistoryHandler());
-        httpServer.createContext("/prioritized", new PrioritizedHandler());
+        httpServer.createContext("/tasks", new TaskHandler(taskManager));
+        httpServer.createContext("/subtasks", new SubTaskHandler(taskManager));
+        httpServer.createContext("/epics", new EpicHandler(taskManager));
+        httpServer.createContext("/history", new HistoryHandler(taskManager));
+        httpServer.createContext("/prioritized", new PrioritizedHandler(taskManager));
     }
 
     public void stopServer() {
         httpServer.stop(0);
     }
 
-    public static void searchMaxIdCounter() {
+    public static void searchMaxIdCounter(TaskManager taskManager) {
         int max = 0;
         for (Task task: taskManager.getAllTask()) {
             if (task.getIdTask() > max) {
