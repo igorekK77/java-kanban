@@ -49,6 +49,21 @@ public class ServerEpicsTests {
     }
 
     @Test
+    public void testUpdateEpic() throws IOException, InterruptedException {
+        URI uri = URI.create("http://localhost:8080/epics");
+        String epicJson = gson.toJson(epic);
+        HttpRequest httpRequest = HttpRequest.newBuilder().uri(uri).POST(HttpRequest.BodyPublishers.ofString(epicJson)).build();
+        HttpResponse<String> response = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+
+        URI uri1 = URI.create("http://localhost:8080/epics/0");
+        HttpRequest httpRequest1 = HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString(epicJson)).uri(uri1).build();
+        HttpResponse<String> response1 = client.send(httpRequest1, HttpResponse.BodyHandlers.ofString());
+        Assertions.assertEquals(201, response1.statusCode());
+        Epic epic1 = gson.fromJson(response1.body(), Epic.class);
+        Assertions.assertEquals(epic, epic1);
+    }
+
+    @Test
     public void testGetEpic() throws IOException, InterruptedException {
         URI uri = URI.create("http://localhost:8080/epics");
         String epicJson = gson.toJson(epic);
@@ -92,13 +107,6 @@ public class ServerEpicsTests {
         Assertions.assertEquals(0, manager.getAllEpic().size());
     }
 
-    @Test
-    public void testFailedDeleteEpic() throws IOException, InterruptedException {
-        URI uri = URI.create("http://localhost:8080/epics/0");
-        HttpRequest httpRequest = HttpRequest.newBuilder().DELETE().uri(uri).build();
-        HttpResponse<String> response = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-        Assertions.assertEquals(404, response.statusCode());
-    }
 
     @Test
     public void testFailedGetEpicOnId() throws IOException, InterruptedException {
@@ -109,13 +117,15 @@ public class ServerEpicsTests {
     }
 
     @Test
-    public void testFailedAddSameEpic() throws IOException, InterruptedException {
-        String epicJson = gson.toJson(epic);
+    public void testFailedUpdateEpic() throws IOException, InterruptedException {
         URI uri = URI.create("http://localhost:8080/epics");
+        String epicJson = gson.toJson(epic);
         HttpRequest httpRequest = HttpRequest.newBuilder().uri(uri).POST(HttpRequest.BodyPublishers.ofString(epicJson)).build();
-        HttpResponse<String> respons = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-        HttpRequest httpRequest1 = HttpRequest.newBuilder().uri(uri).POST(HttpRequest.BodyPublishers.ofString(epicJson)).build();
+        HttpResponse<String> response = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+
+        URI uri1 = URI.create("http://localhost:8080/epics/1");
+        HttpRequest httpRequest1 = HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString(epicJson)).uri(uri1).build();
         HttpResponse<String> response1 = client.send(httpRequest1, HttpResponse.BodyHandlers.ofString());
-        Assertions.assertEquals(406, response1.statusCode());
+        Assertions.assertEquals(404, response1.statusCode());
     }
 }

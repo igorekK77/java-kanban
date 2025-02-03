@@ -110,26 +110,6 @@ public class ServerTasksTests {
     }
 
     @Test
-    public void testFailedDeleteTask() throws IOException, InterruptedException {
-        URI uri = URI.create("http://localhost:8080/tasks/0");
-        HttpRequest httpRequest = HttpRequest.newBuilder().DELETE().uri(uri).build();
-        HttpResponse<String> response = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-        Assertions.assertEquals(404, response.statusCode());
-
-    }
-
-    @Test
-    public void testFailedAddSameTask() throws IOException, InterruptedException {
-        String taskJson = gson.toJson(task);
-        URI uri = URI.create("http://localhost:8080/tasks");
-        HttpRequest httpRequest = HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString(taskJson)).uri(uri).build();
-        HttpResponse<String> response = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-        HttpRequest httpRequest1 = HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString(taskJson)).uri(uri).build();
-        HttpResponse<String> response1 = client.send(httpRequest1, HttpResponse.BodyHandlers.ofString());
-        Assertions.assertEquals(406, response1.statusCode());
-    }
-
-    @Test
     public void testFailedGetTaskOnId() throws IOException, InterruptedException {
         URI uri = URI.create("http://localhost:8080/tasks/0");
         HttpRequest httpRequest = HttpRequest.newBuilder().GET().uri(uri).build();

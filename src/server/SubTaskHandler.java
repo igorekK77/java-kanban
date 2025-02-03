@@ -10,7 +10,7 @@ import java.io.InputStream;
 import java.net.URI;
 
 public class SubTaskHandler extends BaseHttpHandler {
-    TaskManager taskManager;
+    private final TaskManager taskManager;
 
     public SubTaskHandler(TaskManager taskManager) {
         this.taskManager = taskManager;
@@ -46,14 +46,8 @@ public class SubTaskHandler extends BaseHttpHandler {
                     InputStream is = httpExchange.getRequestBody();
                     String subtaskInfo = new String(is.readAllBytes(), BaseHttpHandler.standardCharsets);
                     Subtask subtask = gson.fromJson(subtaskInfo, Subtask.class);
-                    taskManager.setIdCounter(subtask.getIdTask());
-                    if (taskManager.getAllSubTask().contains(subtask)) {
-                        sendHasInteractions(httpExchange, "Данная подзадача уже существует!");
-                    } else {
-                        taskManager.createSubTask(subtask);
-                        HttpTaskServer.searchMaxIdCounter(taskManager);
-                        sendText(httpExchange, "Подзадача_создана: \n" + gson.toJson(subtask));
-                    }
+                    taskManager.createSubTask(subtask);
+                    sendText(httpExchange, "Подзадача_создана: \n" + gson.toJson(subtask));
                 } else {
                     try {
                         int id = Integer.parseInt(elementURI[2]);
@@ -61,9 +55,8 @@ public class SubTaskHandler extends BaseHttpHandler {
                         String subtaskInfo = new String(is.readAllBytes(), BaseHttpHandler.standardCharsets);
                         if (getSubTaskByIdNotHistory(id) != null) {
                             Subtask subtask = gson.fromJson(subtaskInfo, Subtask.class);
-                            subtask.setIdTask(id);
                             taskManager.updateSubTask(subtask);
-                            sendText(httpExchange,  gson.toJson(subtask));
+                            sendText(httpExchange, gson.toJson(subtask));
                         } else {
                             sendNotFound(httpExchange, "Подзадачи с ID = " + id + " не существует");
                         }
@@ -75,12 +68,8 @@ public class SubTaskHandler extends BaseHttpHandler {
             case "DELETE":
                 try {
                     int id = Integer.parseInt(elementURI[2]);
-                    if (getSubTaskByIdNotHistory(id) != null) {
-                        taskManager.deleteSubTaskById(id);
-                        sendText(httpExchange, "Подзадача с Id = " + id + " успешно удалена!");
-                    } else {
-                        sendNotFound(httpExchange, "Подзадачи с ID = " + id + " не существует");
-                    }
+                    taskManager.deleteSubTaskById(id);
+                    sendText(httpExchange, "Подзадача с Id = " + id + " успешно удалена!");
                 } catch (NumberFormatException e) {
                     throw new RuntimeException(e);
                 }

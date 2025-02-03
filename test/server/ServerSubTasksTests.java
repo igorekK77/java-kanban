@@ -33,7 +33,6 @@ public class ServerSubTasksTests {
         manager.removeAllEpic();
         manager.removeAllTask();
         manager.removeAllSubTask();
-        manager.setIdCounter(0);
         epic = new Epic("testEpic", "testEpic");
         manager.createEpic(epic);
     }
@@ -48,6 +47,7 @@ public class ServerSubTasksTests {
         URI uri = URI.create("http://localhost:8080/subtasks");
         Subtask subtask = new Subtask("subtask1", "subtask1", Status.NEW, epic.getIdTask(), Duration.ofMinutes(15),
                 LocalDateTime.now());
+        subtask.setIdTask(1);
         String subtaskJson = gson.toJson(subtask);
         HttpRequest httpRequest = HttpRequest.newBuilder().uri(uri).POST(HttpRequest.BodyPublishers.ofString(subtaskJson)).build();
         HttpResponse<String> response = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
@@ -64,10 +64,11 @@ public class ServerSubTasksTests {
         HttpRequest httpRequest = HttpRequest.newBuilder().uri(uri).POST(HttpRequest.BodyPublishers.ofString(subtaskJson)).build();
         HttpResponse<String> response = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
 
-        URI uri1 = URI.create("http://localhost:8080/subtasks/0");
+        URI uri1 = URI.create("http://localhost:8080/subtasks/1");
         Subtask subtask1 = new Subtask("subtask1 update", "subtask1 update", Status.IN_PROGRESS,
                 epic.getIdTask(), Duration.ofMinutes(15),
                 LocalDateTime.now());
+        subtask1.setIdTask(1);
         String subtaskJson1 = gson.toJson(subtask1);
         HttpRequest httpRequest1 = HttpRequest.newBuilder().uri(uri1).POST(HttpRequest.BodyPublishers.ofString(subtaskJson1)).build();
         HttpResponse<String> response1 = client.send(httpRequest1, HttpResponse.BodyHandlers.ofString());
@@ -81,6 +82,7 @@ public class ServerSubTasksTests {
         URI uri = URI.create("http://localhost:8080/subtasks");
         Subtask subtask = new Subtask("subtask1", "subtask1", Status.NEW, epic.getIdTask(), Duration.ofMinutes(15),
                 LocalDateTime.now());
+        subtask.setIdTask(1);
         String subtaskJson = gson.toJson(subtask);
         HttpRequest httpRequest = HttpRequest.newBuilder().uri(uri).POST(HttpRequest.BodyPublishers.ofString(subtaskJson)).build();
         HttpResponse<String> response = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
@@ -98,10 +100,11 @@ public class ServerSubTasksTests {
         URI uri = URI.create("http://localhost:8080/subtasks");
         Subtask subtask = new Subtask("subtask1", "subtask1", Status.NEW, epic.getIdTask(), Duration.ofMinutes(15),
                 LocalDateTime.now());
+        subtask.setIdTask(1);
         String subtaskJson = gson.toJson(subtask);
         HttpRequest httpRequest = HttpRequest.newBuilder().uri(uri).POST(HttpRequest.BodyPublishers.ofString(subtaskJson)).build();
         HttpResponse<String> response = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-        URI uri1 = URI.create("http://localhost:8080/subtasks/0");
+        URI uri1 = URI.create("http://localhost:8080/subtasks/1");
         HttpRequest httpRequest1 = HttpRequest.newBuilder().uri(uri1).GET().build();
         HttpResponse<String> response1 = client.send(httpRequest1, HttpResponse.BodyHandlers.ofString());
         Assertions.assertEquals(200, response1.statusCode());
@@ -118,20 +121,11 @@ public class ServerSubTasksTests {
         HttpRequest httpRequest = HttpRequest.newBuilder().uri(uri).POST(HttpRequest.BodyPublishers.ofString(subtaskJson)).build();
         HttpResponse<String> response = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
 
-        URI uri1 = URI.create("http://localhost:8080/subtasks/0");
+        URI uri1 = URI.create("http://localhost:8080/subtasks/1");
         HttpRequest httpRequest1 = HttpRequest.newBuilder().uri(uri1).DELETE().build();
         HttpResponse<String> response1 = client.send(httpRequest1, HttpResponse.BodyHandlers.ofString());
         Assertions.assertEquals(200, response1.statusCode());
         Assertions.assertEquals(0, manager.getAllSubTask().size());
-    }
-
-    @Test
-    public void testFailedDeleteSubTasks() throws IOException, InterruptedException {
-        URI uri = URI.create("http://localhost:8080/subtasks/0");
-        HttpRequest httpRequest1 = HttpRequest.newBuilder().uri(uri).DELETE().build();
-        HttpResponse<String> response = client.send(httpRequest1, HttpResponse.BodyHandlers.ofString());
-        Assertions.assertEquals(404, response.statusCode());
-
     }
 
     @Test
@@ -153,16 +147,4 @@ public class ServerSubTasksTests {
         Assertions.assertEquals(404, response.statusCode());
     }
 
-    @Test
-    public void testFailedAddSameSubTask() throws IOException, InterruptedException {
-        Subtask subtask = new Subtask("subtask1", "subtask1", Status.NEW, epic.getIdTask(), Duration.ofMinutes(15),
-                LocalDateTime.now());
-        String subtaskJson = gson.toJson(subtask);
-        URI uri = URI.create("http://localhost:8080/subtasks");
-        HttpRequest httpRequest1 = HttpRequest.newBuilder().uri(uri).POST(HttpRequest.BodyPublishers.ofString(subtaskJson)).build();
-        HttpResponse<String> response = client.send(httpRequest1, HttpResponse.BodyHandlers.ofString());
-        HttpRequest httpRequest2 = HttpRequest.newBuilder().uri(uri).POST(HttpRequest.BodyPublishers.ofString(subtaskJson)).build();
-        HttpResponse<String> response2 = client.send(httpRequest2, HttpResponse.BodyHandlers.ofString());
-        Assertions.assertEquals(406, response2.statusCode());
-    }
 }

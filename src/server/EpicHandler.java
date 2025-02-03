@@ -10,7 +10,7 @@ import java.io.InputStream;
 import java.net.URI;
 
 public class EpicHandler extends BaseHttpHandler {
-    TaskManager taskManager;
+    private final TaskManager taskManager;
 
     public EpicHandler(TaskManager taskManager) {
         this.taskManager = taskManager;
@@ -54,28 +54,34 @@ public class EpicHandler extends BaseHttpHandler {
                 }
                 break;
             case "POST":
-                InputStream is = httpExchange.getRequestBody();
-                String epicInfo = new String(is.readAllBytes(), BaseHttpHandler.standardCharsets);
-                Epic epic = gson.fromJson(epicInfo, Epic.class);
-                taskManager.setIdCounter(epic.getIdTask());
-                if (taskManager.getAllEpic().contains(epic)) {
-                    sendHasInteractions(httpExchange, "Данная задача уже существует!");
-                } else {
+                if (elementsURI.length == 2) {
+                    InputStream is = httpExchange.getRequestBody();
+                    String epicInfo = new String(is.readAllBytes(), BaseHttpHandler.standardCharsets);
+                    Epic epic = gson.fromJson(epicInfo, Epic.class);
                     taskManager.createEpic(epic);
-                    HttpTaskServer.searchMaxIdCounter(taskManager);
                     sendText(httpExchange, "Задача_создана: \n" + gson.toJson(epic));
+                } else {
+                    try {
+                      int id = Integer.parseInt(elementsURI[2]);
+                      InputStream is = httpExchange.getRequestBody();
+                      String epicInfo = new String(is.readAllBytes(), standardCharsets);
+                      if (getEpicByIdNotHistory(id) != null) {
+                          Epic epic = gson.fromJson(epicInfo, Epic.class);
+                          taskManager.updateEpic(epic);
+                          sendText(httpExchange, gson.toJson(epic));
+                      } else {
+                          sendNotFound(httpExchange, "Задачи с ID = " + id + " не существует");
+                      }
+                    } catch (NumberFormatException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
-
                 break;
             case "DELETE":
                 try {
                     int id = Integer.parseInt(elementsURI[2]);
-                    if (getEpicByIdNotHistory(id) != null) {
-                        taskManager.deleteEpicById(id);
-                        sendText(httpExchange, "Задача с Id = " + id + " успешно удалена!");
-                    } else {
-                        sendNotFound(httpExchange, "Задачи с ID = " + id + " не существует");
-                    }
+                    taskManager.deleteEpicById(id);
+                    sendText(httpExchange, "Задача с Id = " + id + " успешно удалена!");
                 } catch (NumberFormatException e) {
                     throw new RuntimeException(e);
                 }

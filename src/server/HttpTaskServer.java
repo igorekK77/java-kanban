@@ -4,9 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpServer;
 import manager.TaskManager;
-import task.Epic;
-import task.Subtask;
-import task.Task;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -15,7 +12,7 @@ import java.time.LocalDateTime;
 
 
 public class HttpTaskServer {
-    private static HttpServer httpServer;
+    private final HttpServer httpServer;
     protected TaskManager taskManager;
 
     public HttpTaskServer(TaskManager taskManager) {
@@ -42,27 +39,6 @@ public class HttpTaskServer {
 
     public void stopServer() {
         httpServer.stop(0);
-    }
-
-    public static void searchMaxIdCounter(TaskManager taskManager) {
-        int max = 0;
-        for (Task task: taskManager.getAllTask()) {
-            if (task.getIdTask() > max) {
-                max = task.getIdTask();
-            }
-        }
-        for (Subtask subtask: taskManager.getAllSubTask()) {
-            if (subtask.getIdTask() > max) {
-                max = subtask.getIdTask();
-            }
-        }
-        for (Epic epic: taskManager.getAllEpic()) {
-            if (epic.getIdTask() > max) {
-                max = epic.getIdTask();
-            }
-        }
-        max++;
-        taskManager.setIdCounter(max);
     }
 
     public static Gson getGson() {

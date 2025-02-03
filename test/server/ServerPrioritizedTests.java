@@ -49,10 +49,10 @@ public class ServerPrioritizedTests {
     public void testGetPrioritized() throws IOException, InterruptedException {
         Subtask subtask = new Subtask("subtask1", "subtask1", Status.NEW, epic.getIdTask(), Duration.ofMinutes(15),
                 LocalDateTime.of(2023, 2,23,12,45));
-        subtask.setIdTask(4);
+        subtask.setIdTask(2);
         Subtask subtask1 = new Subtask("subtask1", "subtask1", Status.NEW, epic.getIdTask(), Duration.ofMinutes(15),
                 LocalDateTime.of(2020, 7,11,10,15));
-        subtask1.setIdTask(6);
+        subtask1.setIdTask(3);
 
         URI uri = URI.create("http://localhost:8080/tasks");
         String taskJson = gson.toJson(task);

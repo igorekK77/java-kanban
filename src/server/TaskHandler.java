@@ -10,7 +10,7 @@ import java.io.InputStream;
 import java.net.URI;
 
 public class TaskHandler extends BaseHttpHandler {
-    TaskManager taskManager;
+    private final TaskManager taskManager;
 
     public TaskHandler(TaskManager taskManager) {
         this.taskManager = taskManager;
@@ -46,14 +46,8 @@ public class TaskHandler extends BaseHttpHandler {
                     InputStream is = httpExchange.getRequestBody();
                     String taskInfo = new String(is.readAllBytes(), BaseHttpHandler.standardCharsets);
                     Task task = gson.fromJson(taskInfo, Task.class);
-                    taskManager.setIdCounter(task.getIdTask());
-                    if (taskManager.getAllTask().contains(task)) {
-                        sendHasInteractions(httpExchange, "Данная задача уже существует!");
-                    } else {
-                        taskManager.createTask(task);
-                        HttpTaskServer.searchMaxIdCounter(taskManager);
-                        sendText(httpExchange, gson.toJson(task));
-                    }
+                    taskManager.createTask(task);
+                    sendText(httpExchange, gson.toJson(task));
                 } else {
                     try {
                         int id = Integer.parseInt(elementURI[2]);
@@ -75,13 +69,8 @@ public class TaskHandler extends BaseHttpHandler {
             case "DELETE":
                 try {
                     int id = Integer.parseInt(elementURI[2]);
-                    Task task = getTaskByIdNotHistory(id);
-                    if (task != null) {
-                        taskManager.deleteTaskById(id);
-                        sendText(httpExchange, "Задача успешно удалена!");
-                    } else {
-                        sendNotFound(httpExchange, "Задачи с id = " + id + " не существует!");
-                    }
+                    taskManager.deleteTaskById(id);
+                    sendText(httpExchange, "Задача успешно удалена!");
                 } catch (NumberFormatException e) {
                     throw new RuntimeException(e);
                 }
