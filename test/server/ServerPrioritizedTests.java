@@ -36,8 +36,6 @@ public class ServerPrioritizedTests {
         manager.removeAllEpic();
         manager.removeAllTask();
         manager.removeAllSubTask();
-        manager.setIdCounter(0);
-        epic.setIdTask(1);
     }
 
     @AfterEach
@@ -47,12 +45,6 @@ public class ServerPrioritizedTests {
 
     @Test
     public void testGetPrioritized() throws IOException, InterruptedException {
-        Subtask subtask = new Subtask("subtask1", "subtask1", Status.NEW, epic.getIdTask(), Duration.ofMinutes(15),
-                LocalDateTime.of(2023, 2,23,12,45));
-        subtask.setIdTask(2);
-        Subtask subtask1 = new Subtask("subtask1", "subtask1", Status.NEW, epic.getIdTask(), Duration.ofMinutes(15),
-                LocalDateTime.of(2020, 7,11,10,15));
-        subtask1.setIdTask(3);
 
         URI uri = URI.create("http://localhost:8080/tasks");
         String taskJson = gson.toJson(task);
@@ -63,15 +55,22 @@ public class ServerPrioritizedTests {
         String taskJson2 = gson.toJson(epic);
         HttpRequest httpRequest1 = HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString(taskJson2)).uri(uri1).build();
         HttpResponse<String> response1 = client.send(httpRequest1, HttpResponse.BodyHandlers.ofString());
+        epic.setIdTask(1);
 
+        Subtask subtask = new Subtask("subtask1", "subtask1", Status.NEW, epic.getIdTask(), Duration.ofMinutes(15),
+                LocalDateTime.of(2023, 2,23,12,45));
+        Subtask subtask1 = new Subtask("subtask1", "subtask1", Status.NEW, epic.getIdTask(), Duration.ofMinutes(15),
+                LocalDateTime.of(2020, 7,11,10,15));
         URI uri2 = URI.create("http://localhost:8080/subtasks");
         String subtaskJson = gson.toJson(subtask);
         HttpRequest httpRequest2 = HttpRequest.newBuilder().uri(uri2).POST(HttpRequest.BodyPublishers.ofString(subtaskJson)).build();
         HttpResponse<String> response2 = client.send(httpRequest2, HttpResponse.BodyHandlers.ofString());
+        subtask.setIdTask(2);
 
         String subtaskJson3 = gson.toJson(subtask1);
         HttpRequest httpRequest3 = HttpRequest.newBuilder().uri(uri2).POST(HttpRequest.BodyPublishers.ofString(subtaskJson3)).build();
         HttpResponse<String> response3 = client.send(httpRequest3, HttpResponse.BodyHandlers.ofString());
+        subtask1.setIdTask(3);
 
         URI uri3 = URI.create("http://localhost:8080/prioritized");
         HttpRequest httpRequest4 = HttpRequest.newBuilder().GET().uri(uri3).build();

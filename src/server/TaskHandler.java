@@ -42,30 +42,19 @@ public class TaskHandler extends BaseHttpHandler {
                 }
                 break;
             case "POST":
-                if (elementURI.length == 2) {
-                    InputStream is = httpExchange.getRequestBody();
-                    String taskInfo = new String(is.readAllBytes(), BaseHttpHandler.standardCharsets);
-                    Task task = gson.fromJson(taskInfo, Task.class);
+                InputStream is = httpExchange.getRequestBody();
+                String taskInfo = new String(is.readAllBytes(), BaseHttpHandler.standardCharsets);
+                Task task = gson.fromJson(taskInfo, Task.class);
+                int taskId = task.getIdTask();
+                if (taskId > 0) {
+                    taskManager.updateTask(task);
+                    sendText(httpExchange,  gson.toJson(task));
+                } else {
                     taskManager.createTask(task);
                     sendText(httpExchange, gson.toJson(task));
-                } else {
-                    try {
-                        int id = Integer.parseInt(elementURI[2]);
-                        InputStream is = httpExchange.getRequestBody();
-                        String taskInfo = new String(is.readAllBytes(), BaseHttpHandler.standardCharsets);
-                        if (getTaskByIdNotHistory(id) != null) {
-                            Task task = gson.fromJson(taskInfo, Task.class);
-                            task.setIdTask(id);
-                            taskManager.updateTask(task);
-                            sendText(httpExchange,  gson.toJson(task));
-                        } else {
-                            sendNotFound(httpExchange, "Задачи с id = " + id + " не существует!");
-                        }
-                    } catch (NumberFormatException e) {
-                        throw new RuntimeException(e);
-                    }
                 }
                 break;
+
             case "DELETE":
                 try {
                     int id = Integer.parseInt(elementURI[2]);
@@ -79,13 +68,4 @@ public class TaskHandler extends BaseHttpHandler {
         }
     }
 
-    private Task getTaskByIdNotHistory(int id) {
-        Task task = null;
-        for (Task task1: taskManager.getAllTask()) {
-            if (task1.getIdTask() == id) {
-                task = task1;
-            }
-        }
-        return task;
-    }
 }

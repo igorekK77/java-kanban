@@ -136,15 +136,4 @@ public class ServerSubTasksTests {
         Assertions.assertEquals(404, response2.statusCode());
     }
 
-    @Test
-    public void testFailedUpdateSubTaskWhichNotExist() throws IOException, InterruptedException {
-        URI uri = URI.create("http://localhost:8080/subtasks/0");
-        Subtask subtask = new Subtask("subtask1", "subtask1", Status.NEW, epic.getIdTask(), Duration.ofMinutes(15),
-                LocalDateTime.now());
-        String subtaskJson = gson.toJson(subtask);
-        HttpRequest httpRequest = HttpRequest.newBuilder().uri(uri).POST(HttpRequest.BodyPublishers.ofString(subtaskJson)).build();
-        HttpResponse<String> response = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-        Assertions.assertEquals(404, response.statusCode());
-    }
-
 }

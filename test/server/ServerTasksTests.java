@@ -50,6 +50,7 @@ public class ServerTasksTests {
 
     @Test
     public void testUpdateTask() throws IOException, InterruptedException {
+        task.setIdTask(1);
         URI uri1 = URI.create("http://localhost:8080/tasks");
         String taskJson = gson.toJson(task);
         HttpRequest httpRequest = HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString(taskJson)).uri(uri1).build();
@@ -117,12 +118,4 @@ public class ServerTasksTests {
         Assertions.assertEquals(404, response.statusCode());
     }
 
-    @Test
-    public void testFailedUpdateTaskWhichNotExist() throws IOException, InterruptedException {
-        String taskJson = gson.toJson(task);
-        URI uri = URI.create("http://localhost:8080/tasks/0");
-        HttpRequest httpRequest = HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString(taskJson)).uri(uri).build();
-        HttpResponse<String> response = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-        Assertions.assertEquals(404, response.statusCode());
-    }
 }

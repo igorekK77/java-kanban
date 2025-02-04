@@ -54,27 +54,16 @@ public class EpicHandler extends BaseHttpHandler {
                 }
                 break;
             case "POST":
-                if (elementsURI.length == 2) {
-                    InputStream is = httpExchange.getRequestBody();
-                    String epicInfo = new String(is.readAllBytes(), BaseHttpHandler.standardCharsets);
-                    Epic epic = gson.fromJson(epicInfo, Epic.class);
-                    taskManager.createEpic(epic);
-                    sendText(httpExchange, "Задача_создана: \n" + gson.toJson(epic));
+                InputStream is = httpExchange.getRequestBody();
+                String epicInfo = new String(is.readAllBytes(), standardCharsets);
+                Epic epic = gson.fromJson(epicInfo, Epic.class);
+                int epicId = epic.getIdTask();
+                if (epicId > 0) {
+                    taskManager.updateEpic(epic);
+                    sendText(httpExchange, gson.toJson(epic));
                 } else {
-                    try {
-                      int id = Integer.parseInt(elementsURI[2]);
-                      InputStream is = httpExchange.getRequestBody();
-                      String epicInfo = new String(is.readAllBytes(), standardCharsets);
-                      if (getEpicByIdNotHistory(id) != null) {
-                          Epic epic = gson.fromJson(epicInfo, Epic.class);
-                          taskManager.updateEpic(epic);
-                          sendText(httpExchange, gson.toJson(epic));
-                      } else {
-                          sendNotFound(httpExchange, "Задачи с ID = " + id + " не существует");
-                      }
-                    } catch (NumberFormatException e) {
-                        throw new RuntimeException(e);
-                    }
+                    taskManager.createEpic(epic);
+                    sendText(httpExchange, gson.toJson(epic));
                 }
                 break;
             case "DELETE":

@@ -50,13 +50,13 @@ public class ServerEpicsTests {
 
     @Test
     public void testUpdateEpic() throws IOException, InterruptedException {
+        epic.setIdTask(1);
         URI uri = URI.create("http://localhost:8080/epics");
         String epicJson = gson.toJson(epic);
         HttpRequest httpRequest = HttpRequest.newBuilder().uri(uri).POST(HttpRequest.BodyPublishers.ofString(epicJson)).build();
         HttpResponse<String> response = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
 
-        URI uri1 = URI.create("http://localhost:8080/epics/0");
-        HttpRequest httpRequest1 = HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString(epicJson)).uri(uri1).build();
+        HttpRequest httpRequest1 = HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString(epicJson)).uri(uri).build();
         HttpResponse<String> response1 = client.send(httpRequest1, HttpResponse.BodyHandlers.ofString());
         Assertions.assertEquals(201, response1.statusCode());
         Epic epic1 = gson.fromJson(response1.body(), Epic.class);
@@ -116,16 +116,4 @@ public class ServerEpicsTests {
         Assertions.assertEquals(404, response.statusCode());
     }
 
-    @Test
-    public void testFailedUpdateEpic() throws IOException, InterruptedException {
-        URI uri = URI.create("http://localhost:8080/epics");
-        String epicJson = gson.toJson(epic);
-        HttpRequest httpRequest = HttpRequest.newBuilder().uri(uri).POST(HttpRequest.BodyPublishers.ofString(epicJson)).build();
-        HttpResponse<String> response = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-
-        URI uri1 = URI.create("http://localhost:8080/epics/1");
-        HttpRequest httpRequest1 = HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString(epicJson)).uri(uri1).build();
-        HttpResponse<String> response1 = client.send(httpRequest1, HttpResponse.BodyHandlers.ofString());
-        Assertions.assertEquals(404, response1.statusCode());
-    }
 }
